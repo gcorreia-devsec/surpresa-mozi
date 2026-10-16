@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Para Você - Nossa História</title>
+    <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           TEMA PEANUTS CLASSIC VIBRANTE
+           ========================================== */
+        :root { 
+            --peanuts-yellow: #FFCC00; --peanuts-red: #E32636; --peanuts-blue: #00B0FF;
+            --peanuts-green: #4CAF50; --peanuts-orange: #FF9800; --peanuts-purple: #9C27B0;
+            --peanuts-pink: #F48FB1; --ink-black: #111111; --pure-white: #FFFFFF;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, a, button, .btn-comic, .dog-photo-area, .coin, .scratch-cover, .envelope, #mailbox-container, #cake-wrapper, .scanner-pad, .giant-think-card, .unlock-slider, .unlock-thumb {
+            cursor: url('patinha-cursor.png'), pointer !important;
+        }
+        body {
+            color: var(--ink-black); font-family: 'Balsamiq Sans', cursive, sans-serif;
+            overflow: hidden; font-weight: 700; background-color: var(--peanuts-yellow);
+            touch-action: none; user-select: none; -webkit-user-select: none;
+        }
+        .screen { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 100vh; 
+            display: none; flex-direction: column; align-items: center; justify-content: center; 
+            padding: 20px; z-index: 1; overflow-y: auto; overflow-x: hidden;
+            background-image: radial-gradient(rgba(0,0,0,0.12) 15%, transparent 16%), radial-gradient(rgba(0,0,0,0.12) 15%, transparent 16%);
+            background-size: 20px 20px; background-position: 0 0, 10px 10px;
+        }
+        .screen.active { display: flex; animation: bouncySlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes bouncySlideIn { 0% { opacity: 0; transform: scale(0.85) translateY(40px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+        .charlie-zigzag { position: absolute; bottom: 0; left: 0; width: 100%; height: 35px; background: linear-gradient(135deg, var(--ink-black) 25%, transparent 25%) -17px 0, linear-gradient(225deg, var(--ink-black) 25%, transparent 25%) -17px 0, linear-gradient(315deg, var(--ink-black) 25%, transparent 25%), linear-gradient(45deg, var(--ink-black) 25%, transparent 25%); background-size: 35px 35px; opacity: 0.1; pointer-events: none; z-index: 0; }
+        
+        /* ADAPTAÇÃO PARA TABLETS E TELAS MAIORES */
+        .comic-panel { border: 6px solid var(--ink-black); border-radius: 15px; box-shadow: 8px 8px 0px rgba(0,0,0,0.25); padding: 28px 20px; text-align: center; max-width: 90%; width: 650px; position: relative; z-index: 10; margin: auto;}
+        h1 { font-size: clamp(3rem, 7vw, 4.5rem); text-transform: uppercase; text-shadow: 4px 4px 0px var(--pure-white); margin-bottom: 18px; transform: rotate(-2deg); line-height: 1.1; }
+        h2 { font-size: clamp(1.8rem, 4vw, 2.5rem); margin-bottom: 12px; text-transform: uppercase; line-height: 1.2; color: var(--ink-black); text-shadow: 2px 2px 0px rgba(255,255,255,0.6);}
+        p { font-size: clamp(1.1rem, 2.5vw, 1.4rem); font-weight: 700; margin-bottom: 18px; color: var(--ink-black); line-height: 1.3;}
+        
+        .security-warning { background: var(--pure-white); border: 4px dashed var(--peanuts-red); border-radius: 10px; padding: 12px 15px; margin-bottom: 22px; font-size: clamp(1.1rem, 2vw, 1.3rem); color: var(--ink-black); transform: rotate(-1deg); box-shadow: 4px 4px 0px rgba(0,0,0,0.15); }
+        .btn-comic { display: inline-block; padding: 15px 30px; background: var(--peanuts-red); color: var(--pure-white); border: 5px solid var(--ink-black); border-radius: 50px; font-family: 'Balsamiq Sans', cursive; font-size: clamp(1.2rem, 2.5vw, 1.5rem); font-weight: bold; text-transform: uppercase; box-shadow: 6px 6px 0px var(--ink-black); transition: all 0.1s; margin-top: 12px; }
+        .btn-comic:active { transform: translate(6px, 6px); box-shadow: 0px 0px 0px var(--ink-black); }
+        .btn-comic:disabled { background: #999; cursor: not-allowed; transform: translate(6px, 6px); box-shadow: none; color: #ccc;}
+
+        /* SLIDER */
+        .unlock-slider { width: 100%; height: 80px; background: #FFF9C4; border: 5px solid var(--ink-black); border-radius: 40px; position: relative; margin: 0 auto; box-shadow: inset 0 5px 10px rgba(0,0,0,0.2); display: flex; align-items: center; overflow: hidden; }
+        .unlock-thumb { width: 68px; height: 68px; background: var(--peanuts-red); border-radius: 50%; border: 4px solid var(--ink-black); position: absolute; left: 4px; display: flex; align-items: center; justify-content: center; z-index: 5; box-shadow: 3px 3px 0 var(--ink-black); touch-action: none; transition: transform 0.1s ease;}
+        .unlock-thumb:active { cursor: grabbing; transform: scale(0.95); }
+        .unlock-arrow-css { width: 18px; height: 18px; border-top: 6px solid var(--pure-white); border-right: 6px solid var(--pure-white); transform: rotate(45deg); margin-right: 4px; pointer-events: none; }
+        .unlock-text { position: absolute; width: 100%; text-align: center; font-size: clamp(1.2rem, 2.5vw, 1.5rem); color: var(--ink-black); z-index: 2; pointer-events: none; font-weight: bold; text-transform: uppercase; padding-left: 35px; transition: opacity 0.2s ease;}
+        #apelidos-carrossel { display: inline-block; transition: opacity 0.4s ease; color: var(--peanuts-red); text-shadow: 2px 2px 0 var(--ink-black); }
+
+        /* BIOMETRIA */
+        .scanner-pad { width: 140px; height: 160px; background: #222; border: 6px solid var(--ink-black); border-radius: 30px; margin: 15px auto; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 6px 6px 0px var(--ink-black), inset 0 0 20px rgba(0, 176, 255, 0.4); }
+        .fingerprint-icon { width: 85px; filter: drop-shadow(0 0 8px var(--peanuts-blue)); z-index: 2; pointer-events: none; }
+        .scan-laser { position: absolute; top: 0; left: 0; width: 100%; height: 6px; background: var(--peanuts-green); box-shadow: 0 0 15px var(--peanuts-green); display: none; z-index: 3; }
+        .scanner-pad.scanning .scan-laser { display: block; animation: scanLaserMove 0.8s ease-in-out infinite alternate; }
+        @keyframes scanLaserMove { 0% { top: 5%; } 100% { top: 90%; } }
+        .bio-meter { width: 100%; height: 35px; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 15px; overflow: hidden; margin: 15px 0; position: relative; }
+        .bio-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--peanuts-blue), var(--peanuts-green), var(--peanuts-red)); transition: width 0.08s linear; }
+        .bio-alert { display: none; background: var(--peanuts-red); color: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 12px; padding: 15px; margin-top: 15px; font-size: clamp(1.1rem, 2vw, 1.3rem); box-shadow: 5px 5px 0 var(--ink-black); }
+
+        /* JORNAL */
+        .jornal-panel { background: #Fdfdfd; color: var(--ink-black); font-family: 'Times New Roman', Times, serif; text-align: center; border: 6px solid var(--ink-black); border-radius: 5px; box-shadow: 8px 8px 0px rgba(0,0,0,0.25); padding: 25px; max-width: 750px; width: 100%; z-index: 10; margin: auto;}
+        .jornal-header { font-size: clamp(2.8rem, 6vw, 4rem); text-transform: uppercase; border-bottom: 5px solid var(--ink-black); margin-bottom: 8px; font-weight: 900; }
+        .jornal-sub { font-size: clamp(1rem, 2vw, 1.2rem); border-bottom: 2px solid var(--ink-black); padding-bottom: 8px; margin-bottom: 15px; font-style: italic; }
+        .jornal-manchete { font-size: clamp(1.8rem, 4vw, 2.5rem); font-weight: bold; line-height: 1.1; margin-bottom: 15px; text-transform: uppercase; }
+        .jornal-texto { font-size: clamp(1.1rem, 2.5vw, 1.4rem); line-height: 1.5; text-align: justify; }
+        @media (min-width: 600px) { .jornal-texto { columns: 2; gap: 20px; } }
+
+        /* QUIZ */
+        .btn-option { background: var(--pure-white); border: 4px solid var(--ink-black); color: var(--ink-black); padding: 15px 20px; font-family: 'Balsamiq Sans', cursive; font-size: clamp(1.1rem, 2vw, 1.3rem); font-weight: bold; border-radius: 12px; box-shadow: 5px 5px 0px var(--ink-black); width: 100%; margin-bottom: 12px; text-align: left; }
+        .btn-option.correct { background: var(--peanuts-green); color: var(--pure-white); } 
+        .btn-option.wrong { background: var(--peanuts-red); color: var(--pure-white); }
+        .speech-bubble { background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 20px; padding: 20px; position: relative; margin-bottom: 25px; box-shadow: 6px 6px 0px var(--ink-black); }
+        #quiz-feedback { display: none; background: var(--peanuts-yellow); border: 4px solid var(--ink-black); border-radius: 12px; padding: 15px; margin-top: 10px; font-size: clamp(1.1rem, 2vw, 1.3rem); box-shadow: 4px 4px 0 var(--ink-black); }
+        
+        /* RÉGUA */
+        .ruler-container { width: 100%; height: 80px; background: var(--pure-white); border: 5px solid var(--ink-black); border-radius: 15px; margin: 30px auto; position: relative; overflow: hidden; box-shadow: 6px 6px 0 var(--ink-black); }
+        .ruler-fill { position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--peanuts-green); transition: width 0.1s linear; border-right: 4px solid var(--ink-black); }
+        .ruler-marks { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: space-between; pointer-events: none; }
+        .ruler-marks .mark { flex: 1; border-left: 3px dashed rgba(0,0,0,0.4); height: 100%; display: flex; align-items: flex-end; padding: 5px; font-size: clamp(0.9rem, 1.5vw, 1.1rem); }
+        .ruler-marks .mark:first-child { border-left: none; }
+        .ruler-marks .mark.final { flex: 1.6; color: var(--peanuts-red); text-transform: uppercase; font-size: clamp(1.2rem, 2.5vw, 1.6rem); justify-content: center; align-items: center; text-align: center; border-left: 5px solid var(--ink-black); background: rgba(255,255,255,0.7); }
+
+        /* FOFURÔMETRO */
+        .bg-pet-decor { position: absolute; opacity: 0.9; z-index: 0; pointer-events: none; filter: drop-shadow(5px 5px 0px rgba(0,0,0,0.4)); }
+        .fofura-container { display: flex; flex-direction: row; justify-content: center; align-items: stretch; width: 100%; max-width: 800px; margin: 15px auto; gap: 20px; z-index: 10; position: relative; }
+        .dog-card { flex: 1; display: flex; flex-direction: column; background: var(--peanuts-blue); border: 6px solid var(--ink-black); border-radius: 20px; padding: 18px; box-shadow: 8px 8px 0 var(--ink-black); position: relative; }
+        .dog-name-tag { position: absolute; top: -20px; left: -10px; background: var(--peanuts-yellow); border: 4px solid var(--ink-black); border-radius: 12px; padding: 6px 18px; font-size: clamp(1.2rem, 2.5vw, 1.5rem); box-shadow: 4px 4px 0 var(--ink-black); z-index: 5; }
+        .dog-photo-area { flex-grow: 1; width: 100%; background-color: var(--pure-white); border: 4px dashed var(--ink-black); border-radius: 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 15px 0; height: 260px; position: relative; }
+        .dog-img { height: 96%; max-width: 96%; object-fit: contain; pointer-events: none; transition: transform 0.2s; }
+        .dog-photo-area.happy .dog-img { transform: scale(1.06); animation: jump 0.5s ease infinite alternate; }
+        @keyframes jump { 0% { transform: translateY(0) scale(1.06); } 100% { transform: translateY(-8px) scale(1.06); } }
+        .dog-progress-bar { width: 100%; height: 35px; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 15px; overflow: hidden; }
+        .dog-progress-fill { width: 0%; height: 100%; background: var(--peanuts-red); transition: width 0.1s linear; }
+        .tiny-heart { position: absolute; color: var(--peanuts-red); font-size: 2.5rem; animation: floatHeart 0.9s ease-out forwards; pointer-events: none; z-index: 10; }
+        @keyframes floatHeart { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-60px) scale(1.4); opacity: 0; } }
+        #dogs-speech-bubble { display: none; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 20px; padding: 15px 20px; margin-top: 15px; box-shadow: 6px 6px 0px var(--ink-black); z-index: 15; font-size: clamp(1.1rem, 2vw, 1.4rem); }
+
+        /* PENSAMENTOS GIGANTES (Ajustes de Altura para Tablet) */
+        .giant-cards-container { 
+            width: 100%; max-width: 550px; margin: 25px auto 10px auto; 
+            position: relative; min-height: 580px; 
+        }
+        .giant-think-card { 
+            width: 100%; background: var(--peanuts-yellow); 
+            border: 6px solid var(--ink-black); border-radius: 25px; padding: 30px 20px; 
+            box-shadow: 10px 10px 0 var(--ink-black); display: flex; flex-direction: column; 
+            align-items: center; justify-content: flex-start; transition: all 0.35s ease; 
+            position: absolute; top: 0; left: 0; z-index: 10; 
+        }
+        .giant-think-card.inactive { opacity: 0; transform: scale(0.8) translateY(40px); pointer-events: none; z-index: 1; }
+        .giant-think-card.active { opacity: 1; transform: scale(1) translateY(0); z-index: 10; }
+        .giant-cloud { 
+            background: var(--pure-white); border: 5px solid var(--ink-black); border-radius: 28px; 
+            padding: 25px 20px; min-height: 120px; width: 100%; display: flex; align-items: center; 
+            justify-content: center; font-size: clamp(1.3rem, 2.5vw, 1.6rem); line-height: 1.4; margin-bottom: 30px; 
+            position: relative; box-shadow: 5px 5px 0 var(--ink-black); color: var(--ink-black); 
+        }
+        .giant-cloud::after { content: ''; position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); width: 20px; height: 20px; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 50%; }
+        .giant-cloud::before { content: ''; position: absolute; bottom: -32px; left: 53%; width: 12px; height: 12px; background: var(--pure-white); border: 3px solid var(--ink-black); border-radius: 50%; }
+        .giant-img-wrapper { width: 100%; height: 320px; background: var(--pure-white); border: 5px solid var(--ink-black); border-radius: 20px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .giant-img-wrapper img { width: 96%; height: 96%; object-fit: contain; }
+        .giant-name-banner { background: var(--peanuts-red); color: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 12px; padding: 8px 30px; font-size: clamp(1.3rem, 2.5vw, 1.6rem); margin-top: -20px; box-shadow: 3px 3px 0 var(--ink-black); z-index: 12; text-transform: uppercase; }
+
+        /* CUPONS */
+        .coupons-grid { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; }
+        .scratch-card { position: relative; width: 100%; height: 80px; background: var(--peanuts-yellow); border: 5px solid var(--ink-black); border-radius: 15px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 5px 5px 0px rgba(0,0,0,0.3); }
+        .scratch-prize { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 2.5vw, 1.5rem); z-index: 1; text-transform: uppercase; }
+        .scratch-cover { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(45deg, #B0BEC5, #B0BEC5 15px, #CFD8DC 15px, #CFD8DC 30px); z-index: 2; display: flex; align-items: center; justify-content: center; font-size: clamp(1.2rem, 2.5vw, 1.4rem); color: #333; text-transform: uppercase; transition: opacity 0.4s; touch-action: none;}
+        .scratch-cover.scratched { opacity: 0; pointer-events: none; }
+        .scratch-card.locked .scratch-cover { background: #90A4AE; color: #222; }
+        
+        /* BOOTH E SLOTS */
+        .booth { position: relative; margin: 20px auto 100px auto; width: 100%; max-width: 320px; }
+        .booth img { width: 100%; display: block; }
+        .slot { width: 90px; height: 25px; background: #222; border-radius: 10px; border: 4px solid var(--ink-black); position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); z-index: 5; }
+        .coin { width: 75px; height: 75px; background: var(--peanuts-yellow); border: 5px solid var(--ink-black); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; position: absolute; bottom: -85px; left: 50%; transform: translateX(-50%); box-shadow: 4px 4px 0 var(--ink-black); z-index: 10; }
+        .receipt { background: var(--pure-white); border: 4px dashed var(--ink-black); padding: 25px; margin-top: 20px; display: none; font-size: clamp(1.2rem, 2vw, 1.4rem); box-shadow: 6px 6px 0 var(--ink-black);}
+        .receipt.show { display: block; margin-bottom: 20px;}
+        .slot-machine-container { display: flex; flex-direction: column; gap: 12px; margin: 25px 0; }
+        .slot-window { background: var(--pure-white); border: 5px solid var(--ink-black); border-radius: 15px; padding: 18px; font-size: clamp(1.4rem, 2.5vw, 1.8rem); min-height: 85px; display: flex; align-items: center; justify-content: center; text-transform: uppercase; color: var(--peanuts-red); }
+
+        /* VITROLA VINTAGE REFEITA */
+        .vitrola-container { 
+            position: relative; width: 300px; height: 300px; margin: 15px auto 30px auto; 
+            background: linear-gradient(145deg, #a05a2c 0%, #6b3a17 100%);
+            border: 8px solid #4a250c; border-radius: 12px; 
+            box-shadow: 10px 10px 0px var(--ink-black), inset 0 0 20px rgba(0,0,0,0.6); 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .vitrola-platter { 
+            position: absolute; width: 240px; height: 240px; background: #ddd; 
+            border-radius: 50%; border: 6px solid #999; box-shadow: 0 4px 10px rgba(0,0,0,0.4); 
+        }
+        .vinyl { 
+            width: 226px; height: 226px; background: #111; border-radius: 50%; 
+            background-image: repeating-radial-gradient(#111, #111 4px, #2a2a2a 5px, #111 6px); 
+            display: flex; align-items: center; justify-content: center; z-index: 2; box-shadow: inset 0 0 10px #000;
+        }
+        .vinyl-label { 
+            width: 76px; height: 76px; background: var(--peanuts-red); border-radius: 50%; 
+            border: 3px solid #FFCC00; display: flex; align-items: center; justify-content: center; 
+            font-size: 14px; font-weight: bold; color: #FFF; text-align: center; 
+        }
+        .vinyl-hole { width: 14px; height: 14px; background: #fff; border-radius: 50%; position: absolute; }
+        .tonearm-base { 
+            position: absolute; top: 20px; right: 20px; width: 45px; height: 45px; 
+            background: radial-gradient(circle, #ccc, #888); border: 3px solid #333; 
+            border-radius: 50%; z-index: 11; box-shadow: 2px 2px 5px rgba(0,0,0,0.5); 
+        }
+        .tonearm { 
+            position: absolute; top: 40px; right: 35px; width: 14px; height: 140px; 
+            background: linear-gradient(to right, #ddd, #999); border: 2px solid #333; 
+            border-radius: 7px; transform-origin: 7px 10px; transform: rotate(-20deg); 
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+        }
+        .tonearm::after { 
+            content: ''; position: absolute; bottom: -6px; left: -9px; width: 28px; height: 40px; 
+            background: #222; border: 2px solid #555; border-radius: 5px; 
+        }
+        .tonearm.play { transform: rotate(26deg); }
+        .vinyl.spin { animation: spinVinyl 3s linear infinite; }
+        @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
+
+        /* CORREIO, LAUDO, BOLO, CARTA, CONTRATO, FINAL */
+        #screen-correio .comic-panel { background-color: #ADD8E6; border-color: var(--ink-black); }
+        .mail-grid { display: none; flex-direction: column; gap: 18px; margin-top: 20px; perspective: 1000px; }
+        .mail-grid.show { display: flex; }
+        .envelope { width: 100%; height: 115px; position: relative; transition: transform 0.6s; transform-style: preserve-3d; }
+        .envelope.open { transform: rotateY(180deg); }
+        .env-front, .env-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; border: 5px solid var(--ink-black); border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 15px; }
+        .env-front { background: var(--peanuts-yellow); box-shadow: 5px 5px 0 var(--ink-black); font-size: clamp(1.2rem, 2vw, 1.4rem); }
+        .env-back { background: #ADD8E6; transform: rotateY(180deg); font-size: clamp(1.1rem, 2vw, 1.3rem); }
+        
+        .laudo-wrapper { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; width: 100%; text-align: left; margin-top: 15px; }
+        .snoopy-psi-img img { width: 100%; max-width: 220px; }
+        .clipboard { flex: 1; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 8px; padding: 35px 25px 25px 25px; position: relative; box-shadow: 6px 6px 0px var(--ink-black); font-family: 'Courier New', monospace; min-width: 280px; }
+        .laudo-stamp { position: absolute; bottom: 10px; right: 10px; font-size: 2rem; color: rgba(227, 38, 54, 0.85); border: 4px solid rgba(227, 38, 54, 0.85); border-radius: 8px; padding: 5px 12px; transform: rotate(-12deg); font-family: 'Balsamiq Sans', cursive; }
+        
+        #cake-wrapper { position: relative; width: 280px; height: 270px; margin: 10px auto; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        .cake-svg { width: 100%; height: 230px; overflow: visible; }
+        .flame-container { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); width: 38px; height: 55px; z-index: 20; transition: all 0.2s; }
+        .flame-outer { position: absolute; bottom: 0; left: 4px; width: 26px; height: 46px; background: linear-gradient(to top, #FF5722, #FF9800, #FFEB3B); border-radius: 50% 50% 35% 35%; box-shadow: 0 0 15px #FF9800; border: 2px solid var(--ink-black); animation: flickerFlame 0.15s infinite alternate; }
+        .flame-inner { position: absolute; bottom: 4px; left: 11px; width: 14px; height: 24px; background: #FFF; border-radius: 50%; }
+        @keyframes flickerFlame { 0% { transform: rotate(-3deg) scaleY(0.95); } 100% { transform: rotate(3deg) scaleY(1.05); } }
+        .flame-container.blown-out { opacity: 0; transform: translateX(-50%) scale(0); pointer-events: none; }
+        .mic-meter-box { display: none; width: 100%; max-width: 320px; margin: 10px auto; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 20px; padding: 6px; }
+        .mic-meter-bar { width: 0%; height: 20px; background: linear-gradient(90deg, var(--peanuts-blue), var(--peanuts-green), var(--peanuts-red)); border-radius: 12px; }
+        
+        .carta-gui { background: #fffdf5; border: 3px solid var(--ink-black); border-radius: 10px; padding: 25px; font-family: 'Courier New', monospace; font-size: clamp(1.2rem, 2.5vw, 1.4rem); text-align: left; line-height: 1.5; margin-bottom: 20px; }
+        .contrato-box { background: #fffae6; border: 4px double var(--ink-black); border-radius: 8px; padding: 22px; font-family: 'Courier New', monospace; text-align: justify; margin-bottom: 20px; }
+        .contrato-box p { font-size: clamp(1.1rem, 2.2vw, 1.25rem); margin-bottom: 10px; font-weight: normal; }
+        .checkbox-container { display: flex; align-items: center; justify-content: center; background: #fff; padding: 15px; border-radius: 10px; border: 3px dashed var(--ink-black); }
+        .checkbox-container input { transform: scale(1.8); margin-right: 15px; }
+        
+        .falling-photo { position: fixed; width: 70px; height: 70px; object-fit: cover; border-radius: 10px; border: 2px solid white; opacity: 0.5; z-index: 0; pointer-events: none; transition: transform 12s linear, top 12s linear; }
+        .clothesline-container { position: absolute; top: 6%; left: 0; width: 100%; height: 160px; z-index: 2; pointer-events: none; }
+        .wire { position: absolute; top: 25px; left: 0; width: 100%; height: 20px; border-bottom: 5px solid var(--ink-black); border-radius: 50%; }
+        .hanging-photo { position: absolute; top: 25px; width: 100px; height: 115px; background: #fff; padding: 8px 8px 24px 8px; box-shadow: 6px 6px 0px rgba(0,0,0,0.4); border: 3px solid var(--ink-black); transform-origin: top center; }
+        .hanging-photo img { width: 100%; height: 100%; object-fit: cover; border: 2px solid var(--ink-black);}
+        .swing-1 { animation: swing 4s ease-in-out infinite alternate; } .swing-2 { animation: swing 5s ease-in-out infinite alternate-reverse; }
+        @keyframes swing { 0% { transform: rotate(-5deg); } 100% { transform: rotate(5deg); } }
+        .snoopy-grass { position: absolute; bottom: 0; left: 0; width: 100%; height: 70px; background: var(--peanuts-green); border-top: 6px solid var(--ink-black); z-index: 4; }
+        
+        #celebration-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        #celebration-overlay.show { opacity: 1; }
+        #snoopy-dance { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); width: 350px; z-index: 9999; opacity: 0; transition: all 0.4s; pointer-events: none; }
+        #snoopy-dance.show { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        .woodstock-wrapper { position: fixed; top: 8%; width: 95px; z-index: 1000; pointer-events: none; animation: flyX 25s linear infinite; }
+        .woodstock-bob { width: 100%; animation: bobY 1.5s ease-in-out infinite alternate; }
+        @keyframes flyX { 0% { left: -100px; transform: scaleX(1); } 49.9% { left: 110vw; transform: scaleX(1); } 50% { left: 110vw; transform: scaleX(-1); } 100% { left: -100px; transform: scaleX(-1); } }
+        @keyframes bobY { 0% { transform: translateY(-12px); } 100% { transform: translateY(12px); } }
+        .confetti { position: fixed; width: 16px; height: 16px; z-index: 9999; border: 2px solid var(--ink-black); animation: fall linear forwards; }
+        @keyframes fall { 0% { transform: translateY(-100px) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <audio id="musica-ambiente" loop><source src="ambientacao.mp3" type="audio/mpeg"></audio>
+    <audio id="sound-au"><source src="auau.mp3" type="audio/mpeg"></audio>
+    <audio id="sound-coin"><source src="coin.mp3" type="audio/mpeg"></audio>
+
+    <div class="woodstock-wrapper"><img src="woodstock.png" class="woodstock-bob" alt="Woodstock"></div>
+
+    <!-- TELA 0: INTRODUÇÃO -->
+    <div id="screen-intro" class="screen active" style="background-color: var(--peanuts-blue);">
+        <img src="snoopy-festa.gif" alt="Snoopy Festa" style="max-width: 220px; margin-bottom: 20px; filter: drop-shadow(6px 6px 0px rgba(0,0,0,0.3)); z-index: 10;">
+        <div class="comic-panel" style="background-color: var(--pure-white);">
+            <h2 style="color: var(--peanuts-red); font-size: clamp(2.2rem, 5vw, 3rem); margin-bottom: 15px;">Parabéns pelo seu dia, <br><span id="apelidos-carrossel">Mozi</span>!</h2>
+            <div class="security-warning"><b>Atenção:</b> Área restrita apenas para a aniversariante mais linda do mundo. Deslize (ou toque na barra) para entrar.</div>
+            <div class="unlock-slider" id="unlock-slider">
+                <div class="unlock-text" id="unlock-text">Deslize para abrir</div>
+                <div class="unlock-thumb" id="unlock-thumb">
+                    <div class="unlock-arrow-css"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA 1: BIOMETRIA (NOVO CORAÇÃO) -->
+    <div id="screen-biometria" class="screen" style="background-color: var(--peanuts-purple);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--pure-white);">
+            <h2>Verificação de Segurança 🔍</h2>
+            <p id="bio-status-text">Pressione e <b>SEGURE o dedo</b> no leitor abaixo para medir seu nível de lindeza e amor pelo Guilherme:</p>
+            <div class="scanner-pad" id="scanner-pad">
+                <div class="scan-laser"></div>
+                <!-- Imagem do coração (salve como coracao.png na pasta) -->
+                <img src="coracao.png" class="fingerprint-icon" alt="Coração" onerror="this.style.display='none'">
+            </div>
+            <div class="bio-meter"><div class="bio-fill" id="bio-fill"></div></div>
+            <div class="bio-alert" id="bio-alert">
+                🚨 <b>ALERTA DE SOBRECARGA!</b> 🚨<br>
+                O nível de perfeição explodiu o medidor! Identidade confirmada: <b>100% Mozibete Oficial!</b>
+            </div>
+            <button id="btn-next-bio" class="btn-comic" onclick="mudarTela('screen-hero')" style="width: 100%; display: none; background: var(--peanuts-green);">Acesso VIP Liberado! ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 2: AVENTURA -->
+    <div id="screen-hero" class="screen" style="background-color: var(--peanuts-orange);">
+        <div class="charlie-zigzag"></div>
+        <h1>A Nossa Aventura</h1>
+        <p style="font-size: clamp(1.4rem, 3vw, 1.8rem); color: var(--pure-white); text-shadow: 2px 2px 0 var(--ink-black);">Espero que goste dessa surpresinha, não é muito, mas é de coração.</p>
+        <button class="btn-comic" onclick="mudarTela('screen-jornal')">Começar Surpresa</button>
+        <img src="snoopy-hero.png" style="width: 250px; margin-top: 30px; filter: drop-shadow(6px 6px 0px rgba(0,0,0,0.3)); z-index: 5;">
+    </div>
+
+    <!-- TELA 3: JORNAL -->
+    <div id="screen-jornal" class="screen" style="background-color: var(--peanuts-yellow);">
+        <div class="charlie-zigzag"></div>
+        <div class="jornal-panel">
+            <div class="jornal-header">THE DAILY MOZI</div>
+            <div class="jornal-sub">Edição Especial de Aniversário - Edição Única e Exclusiva</div>
+            <div class="jornal-manchete">EXTRA! A MULHER MAIS INCRÍVEL DO MUNDO FAZ ANIVERSÁRIO!</div>
+            <div class="jornal-texto">
+                Fontes seguras avistaram uma movimentação no dia de hoje, moradores e autoridades suspeitam que um mozi bem bonitinho esteja fazendo aniversário. Segundo especialistas, os índices de beleza no mundo aumentaram em 234% devido a este ocorrido. Sabe-se que nem todas as pessoas conseguem lidar com tanta beleza, então aos que participam do seguinte grupo de risco: cardíacos, idosos com mais de 60 anos e principalmente o mozi, é recomendado que tomem cuidado ao se aproximar desta gatinha.
+            </div>
+            <button class="btn-comic" onclick="mudarTela('screen-quiz')" style="margin-top: 25px;">Ler o Resto do Caderno ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 4: QUIZ -->
+    <div id="screen-quiz" class="screen" style="background-color: var(--peanuts-green);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--peanuts-blue); padding-top: 70px;">
+            <img src="snoopy-dormindo.png" style="position: absolute; top: -95px; left: 50%; transform: translateX(-50%); width: 160px; z-index: 15;">
+            <h2>Quiz de Cumplicidade ❤️</h2>
+            <p style="color: var(--pure-white); text-shadow: 2px 2px 0 var(--ink-black); margin-bottom: 15px;">Nossa história e o seu grande dia!</p>
+            <div id="question-area" style="margin-top: 20px;">
+                <div class="speech-bubble"><h3 id="q-text" style="font-size: clamp(1.2rem, 2.5vw, 1.4rem); color:var(--ink-black);">...</h3></div>
+                <div id="q-options"></div>
+                <div id="quiz-feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TELA 5: RÉGUA -->
+    <div id="screen-regua" class="screen" style="background-color: var(--peanuts-pink);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--peanuts-yellow);">
+            <h2>Quanto tempo os mozi vão ficar junto?</h2>
+            <div class="ruler-container">
+                <div class="ruler-fill" id="ruler-fill"></div>
+                <div class="ruler-marks">
+                    <div class="mark">+1 ano</div>
+                    <div class="mark">+5 anos</div>
+                    <div class="mark">+10 anos</div>
+                    <div class="mark final">Pra Sempre<br>Eba!</div>
+                </div>
+            </div>
+            <button class="btn-comic" id="btn-hammer" onclick="encherRegua()" style="width: 100%;">CLICA SE AMA O MOZI</button>
+            <button id="btn-next-fofura" class="btn-comic" onclick="mudarTela('screen-fofurometro')" style="margin-top: 20px; width: 100%; display: none;">Conseguiu! Avançar ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 6: FOFURÔMETRO -->
+    <div id="screen-fofurometro" class="screen" style="background-color: var(--peanuts-yellow); padding: 10px;">
+        <img src="osso.png" class="bg-pet-decor" style="top: 3%; left: 2%; width: 140px; transform: rotate(-25deg);">
+        <img src="brinquedo.png" class="bg-pet-decor" style="top: 4%; right: 2%; width: 150px; transform: rotate(20deg);">
+        <img src="patinha.png" class="bg-pet-decor" style="bottom: 5%; left: 2%; width: 110px; transform: rotate(35deg);">
+        <img src="patinha.png" class="bg-pet-decor" style="bottom: 8%; right: 2%; width: 120px; transform: rotate(-25deg);">
+
+        <div style="text-align: center; z-index: 5;">
+            <h2 style="font-size: clamp(2.5rem, 6vw, 3.5rem); color: var(--ink-black); text-shadow: 2px 2px 0 var(--pure-white);">FOFURÔMETRO 🐾</h2>
+            <p style="font-size: clamp(1.1rem, 2vw, 1.3rem); background: var(--pure-white); padding: 8px 20px; border-radius: 20px; border: 4px solid var(--ink-black); display: inline-block; box-shadow: 4px 4px 0 var(--ink-black);">Esfregue o dedo neles para fazer carinho!</p>
+        </div>
+        
+        <div class="fofura-container">
+            <div class="dog-card">
+                <div class="dog-name-tag">Luke</div>
+                <div class="dog-photo-area" id="luke-img-container"><img src="luke.png" alt="Luke" id="luke-img" class="dog-img"></div>
+                <div class="dog-progress-bar"><div class="dog-progress-fill" id="luke-fill"></div></div>
+            </div>
+            <div class="dog-card">
+                <div class="dog-name-tag" style="left: auto; right: -8px;">Lobinho</div>
+                <div class="dog-photo-area" id="lobinho-img-container"><img src="lobinho.png" alt="Lobinho" id="lobinho-img" class="dog-img"></div>
+                <div class="dog-progress-bar"><div class="dog-progress-fill" id="lobinho-fill"></div></div>
+            </div>
+        </div>
+        <div id="dogs-speech-bubble">"Obrigado pelo carinho! Agora descubra o que estamos pensando! Au Au!" 🐾</div>
+        <button id="btn-portao" class="btn-comic" onclick="mudarTela('screen-pensamentos')" style="margin-top: 15px; width: 90%; max-width: 500px; display: none; z-index: 5; background: var(--peanuts-green);">Ler Mente dos Cachorros 💭 ➔</button>
+    </div>
+
+    <!-- TELA 7: PENSAMENTOS GIGANTES -->
+    <div id="screen-pensamentos" class="screen" style="background-color: var(--peanuts-orange);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--pure-white); max-width: 600px; padding: 30px 20px;">
+            <h2 style="margin-bottom: 5px;">Mentes Ocultas 💭</h2>
+            <p id="sub-pensamentos-text" style="font-size: clamp(1.2rem, 2.5vw, 1.4rem); margin-bottom: 20px;">Toque no card grande para ver os pensamentos do Luke!</p>
+
+            <div class="giant-cards-container">
+                <!-- CARD LUKE -->
+                <div class="giant-think-card active" id="card-luke" onclick="avancarPensamento('luke')">
+                    <div class="giant-cloud" id="luke-bubble-text">"espero que me levem pra passear"</div>
+                    <div class="giant-img-wrapper">
+                        <img id="luke-think-img" src="luke-pensando.png" onerror="this.src='luke.png'" alt="Luke Pensando">
+                    </div>
+                    <div class="giant-name-banner">Luke</div>
+                    <div id="luke-counter-text" style="margin-top: 15px; font-size: 1.3rem; color: var(--peanuts-red);">Toque no card (1/3)</div>
+                </div>
+
+                <!-- CARD LOBINHO -->
+                <div class="giant-think-card inactive" id="card-lobinho" onclick="avancarPensamento('lobinho')" style="background: var(--peanuts-blue);">
+                    <div class="giant-cloud" id="lobinho-bubble-text">"e se....."</div>
+                    <div class="giant-img-wrapper">
+                        <img id="lobinho-think-img" src="lobinho-pensando.png" onerror="this.src='lobinho.png'" alt="Lobinho Pensando">
+                    </div>
+                    <div class="giant-name-banner" style="background: var(--peanuts-yellow); color: var(--ink-black);">Lobinho</div>
+                    <div id="lobinho-counter-text" style="margin-top: 15px; font-size: 1.3rem; color: var(--pure-white); text-shadow: 2px 2px 0 var(--ink-black);">Toque no card (1/3)</div>
+                </div>
+            </div>
+
+            <button id="btn-next-cupons" class="btn-comic" onclick="mudarTela('screen-cupons')" style="width: 100%; display: none; background: var(--peanuts-green);">Chega de pensar! Avançar ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 8: CUPONS -->
+    <div id="screen-cupons" class="screen" style="background-color: var(--peanuts-purple);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--peanuts-yellow);">
+            <h2>Cupons do Mozi 🎟️</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 15px;">Passe o dedo ou o mouse <b>(segurando o clique)</b> para raspar e ganhar presentinhos. Escolha 3!</p>
+            <div class="coupons-grid">
+                <div class="scratch-card"><div class="scratch-prize">1 Massagem Grátis 💆‍♀️</div><div class="scratch-cover">Raspar</div></div>
+                <div class="scratch-card"><div class="scratch-prize">Seu Chocolate Favorito 🍫</div><div class="scratch-cover">Raspar</div></div>
+                <div class="scratch-card"><div class="scratch-prize">Pergunta Sem Restrição 🤫</div><div class="scratch-cover">Raspar</div></div>
+                <div class="scratch-card"><div class="scratch-prize">1 Favor Inegável 🧞‍♂️</div><div class="scratch-cover">Raspar</div></div>
+                <div class="scratch-card"><div class="scratch-prize">Tarde dos Sonhos 🌤️</div><div class="scratch-cover">Raspar</div></div>
+            </div>
+            <div id="coupon-counter" style="margin: 20px 0 10px 0; font-size: 1.4rem; color: var(--peanuts-red);">Você tem 3 escolhas restantes.</div>
+            <button id="btn-next-elogios" class="btn-comic" onclick="mudarTela('screen-elogios')" style="width: 100%;" disabled>Avançar ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 9: MÁQUINA DE CONSELHOS -->
+    <div id="screen-elogios" class="screen" style="background-color: var(--peanuts-orange);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--peanuts-blue);">
+            <h2>A Máquina de Conselhos</h2>
+            <p style="font-size: clamp(1.2rem, 2.5vw, 1.4rem); color: var(--pure-white); text-shadow: 2px 2px 0 var(--ink-black);">Arraste a moedinha (ou toque nela) para a barraca:</p>
+            <div class="booth" id="booth">
+                <img src="lucy-booth.png" alt="Barraca da Lucy">
+                <div class="slot" id="slot"></div>
+                <div class="coin" id="coin" onclick="inserirMoedaDireto()">5¢</div>
+            </div>
+            <div class="receipt" id="receipt">
+                <strong style="color: var(--peanuts-red);">Conselho:</strong><br>
+                <span id="elogio-texto"></span>
+            </div>
+            <button class="btn-comic" onclick="mudarTela('screen-slots')" style="margin-top: 25px; width: 100%;">Avançar ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 10: CAÇA-NÍQUEIS -->
+    <div id="screen-slots" class="screen" style="background-color: var(--peanuts-purple);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--peanuts-orange);">
+            <h2>Roleta do Coração 🎰</h2>
+            <p style="color: var(--pure-white); text-shadow: 2px 2px 0 var(--ink-black);">Clique para sortear motivos pelos quais sou louco por você!</p>
+            <div class="slot-machine-container">
+                <div class="slot-window" id="slot1">EU AMO...</div>
+                <div class="slot-window" id="slot2">TUDO...</div>
+                <div class="slot-window" id="slot3">EM VOCÊ!</div>
+            </div>
+            <button class="btn-comic" id="btn-girar-slots" onclick="girarSlots()" style="width: 100%; background: var(--peanuts-green);">Girar a Roleta!</button>
+            <button class="btn-comic" id="btn-next-slots" onclick="mudarTela('screen-music')" style="width: 100%; display: none; background: var(--peanuts-blue);">Avançar para a Música ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 11: VITROLA -->
+    <div id="screen-music" class="screen" style="background-color: var(--peanuts-green);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--pure-white);">
+            <h2>Nossa Trilha Sonora 🎵</h2>
+            <div class="vitrola-container">
+                <div class="vitrola-platter"></div>
+                <div class="vinyl" id="disco"><div class="vinyl-label">Gal<br>Costa<div class="vinyl-hole"></div></div></div>
+                <div class="tonearm-base"></div>
+                <div class="tonearm" id="agulha"></div>
+            </div>
+            <p style="font-style: italic; color: var(--peanuts-red); font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 15px 0;">"Para sempre, eternamente..."</p>
+            <audio id="musica-casal" loop><source src="eternamente.mp3" type="audio/mpeg"></audio>
+            <button id="btn-play" class="btn-comic" style="background: var(--peanuts-blue); width: 100%;" onclick="tocarMusica()">▶ Tocar Nossa Música</button>
+            <button class="btn-comic" onclick="mudarTela('screen-correio')" style="margin-top: 20px; width: 100%;">Continuar a Surpresa ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 12: CORREIO -->
+    <div id="screen-correio" class="screen" style="background-color: var(--peanuts-blue);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel">
+            <h2>Correio do Mozi 📬</h2>
+            <p id="correio-instrucao">Tem correspondência pra você! <b>Toque na caixa para abrir.</b></p>
+            <div id="mailbox-container" onclick="abrirCorreio()"><img src="snoopy-mailbox.png" id="mailbox-img"></div>
+            <div class="mail-grid" id="mail-grid">
+                <div class="envelope" onclick="this.classList.toggle('open')"><div class="env-front">Quando bater a saudade...</div><div class="env-back">"Lembre-se que nunca estamos verdadeiramente longe um do outro, nossas almas não se separam."</div></div>
+                <div class="envelope" onclick="this.classList.toggle('open')"><div class="env-front">Quando estivermos brigados...</div><div class="env-back">"Por mais que existam conflitos, eles só constroem uma base mais forte pro nosso amor."</div></div>
+                <div class="envelope" onclick="this.classList.toggle('open')"><div class="env-front">Quando quiser sorrir...</div><div class="env-back">"Mozi será que já terminaram de montar minha moto?"</div></div>
+            </div>
+            <button id="btn-next-laudo" class="btn-comic" onclick="mudarTela('screen-laudo')" style="margin-top: 25px; width: 100%; display: none;">Ver o Laudo do Mozi ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 13: LAUDO -->
+    <div id="screen-laudo" class="screen" style="background-color: var(--peanuts-yellow);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="max-width: 850px; background-color: var(--pure-white);">
+            <h2>Laudo do Paciente</h2>
+            <div class="laudo-wrapper">
+                <div class="snoopy-psi-img"><img src="snoopy-psicologo.png" alt="Doutor Snoopy"></div>
+                <div class="clipboard">
+                    <p style="font-size: clamp(1.2rem, 2.5vw, 1.4rem); margin-bottom: 15px;"><strong>PACIENTE:</strong> Guilherme Correia</p>
+                    <p style="font-size: clamp(1.1rem, 2vw, 1.25rem); margin-bottom: 15px;"><strong>SINTOMAS:</strong> Taquicardia e aumento de pressão ao ver a doutora.</p>
+                    <p style="font-size: clamp(1.1rem, 2vw, 1.25rem); margin-bottom: 15px;"><strong>DIAGNÓSTICO:</strong> Paixão aguda com surtos ocasionais de obsessão no suvaquinho da doutora.</p>
+                    <p style="font-size: clamp(1.1rem, 2vw, 1.25rem);"><strong>TRATAMENTO:</strong> Carinho e beijo 3 mil vezes ao dia por 80 anos.</p>
+                    <div class="laudo-stamp">URGENTE</div>
+                </div>
+            </div>
+            <button class="btn-comic" onclick="mudarTela('screen-bolo')" style="width: 100%; max-width: 400px; margin-top: 25px;">Hora do Bolo! 🎂 ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 14: BOLO -->
+    <div id="screen-bolo" class="screen" style="background-color: var(--peanuts-orange);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--pure-white);">
+            <h2 style="color: var(--peanuts-red);">Hora do Pedido! 🎂</h2>
+            <p id="bolo-instrucao" style="font-size: clamp(1.1rem, 2vw, 1.3rem); margin-bottom: 10px;">Faça o seu pedido e <b>ASSOPRE no microfone</b> (ou toque no bolo) para apagar a vela!</p>
+            <div id="cake-wrapper" onclick="apagarVela()">
+                <div class="flame-container" id="candle-flame">
+                    <div class="flame-outer"></div>
+                    <div class="flame-inner"></div>
+                </div>
+                <svg class="cake-svg" viewBox="0 0 260 220">
+                    <path d="M 95 212 L 165 212 L 150 195 L 110 195 Z" fill="#CFD8DC" stroke="#111" stroke-width="5"/>
+                    <ellipse cx="130" cy="195" rx="115" ry="14" fill="#ECEFF1" stroke="#111" stroke-width="5"/>
+                    <rect x="35" y="120" width="190" height="72" rx="12" fill="#FFE082" stroke="#111" stroke-width="5"/>
+                    <line x1="38" y1="158" x2="222" y2="158" stroke="#E32636" stroke-width="7"/>
+                    <path d="M 35 128 Q 35 115 50 115 L 210 115 Q 225 115 225 128 L 225 140 Q 212 162 198 138 Q 182 118 168 144 Q 152 168 135 138 Q 118 118 102 146 Q 85 168 68 138 Q 50 120 35 142 Z" fill="#F48FB1" stroke="#111" stroke-width="5"/>
+                    <rect x="65" y="68" width="130" height="52" rx="10" fill="#FFE082" stroke="#111" stroke-width="5"/>
+                    <path d="M 65 76 Q 65 64 78 64 L 182 64 Q 195 64 195 76 L 195 86 Q 182 106 168 85 Q 155 68 140 92 Q 125 112 110 85 Q 95 68 82 92 Q 72 106 65 86 Z" fill="#E32636" stroke="#111" stroke-width="5"/>
+                    <rect x="121" y="18" width="18" height="46" rx="3" fill="#FFFFFF" stroke="#111" stroke-width="4"/>
+                    <line x1="130" y1="10" x2="130" y2="18" stroke="#111" stroke-width="4"/>
+                </svg>
+            </div>
+            <div class="mic-meter-box" id="mic-meter-box"><div class="mic-meter-bar" id="mic-meter-bar"></div></div>
+            <button id="btn-mic" class="btn-comic" onclick="ativarMicrofoneBolo()" style="background: var(--peanuts-blue); width: 100%; font-size: clamp(1.1rem, 2vw, 1.3rem);">🎙️ Ativar Microfone para Soprar</button>
+            <button id="btn-next-carta" class="btn-comic" onclick="mudarTela('screen-carta-gui')" style="width: 100%; display: none; background: var(--peanuts-green);">Pedido Feito! Ler Carta ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 15: CARTA -->
+    <div id="screen-carta-gui" class="screen" style="background-color: var(--peanuts-blue);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--pure-white);">
+            <h2 style="color: var(--peanuts-red);">De: Guilherme</h2>
+            <h2 style="font-size: clamp(1.3rem, 2.5vw, 1.6rem); margin-bottom: 20px;">Para: A mulher da minha vida</h2>
+            <div class="carta-gui">
+                Mozibete,<br><br>
+                Programar esse site foi só um jeito que eu encontrei de tentar organizar um pouquinho de tudo o que eu sinto por você.<br><br>
+                Feliz aniversário! Eu sou o cara mais sortudo do mundo por poder dividir meus dias, as risadas, os conselhos e até os surtos com você. Quero continuar do seu lado pra sempre.<br><br>
+                Te amo infinitamente. ❤️
+            </div>
+            <button class="btn-comic" onclick="mudarTela('screen-contrato')" style="width: 100%;">Quase lá... ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 16: CONTRATO -->
+    <div id="screen-contrato" class="screen" style="background-color: var(--peanuts-green);">
+        <div class="charlie-zigzag"></div>
+        <div class="comic-panel" style="background-color: var(--pure-white);">
+            <div class="contrato-box">
+                <h3 style="text-align:center; margin-bottom:15px; font-size: clamp(1.3rem, 2.5vw, 1.6rem);">CONTRATO OFICIAL DE ANIVERSÁRIO</h3>
+                <p><b>CLÁUSULA 1:</b> A aniversariante ("Mozi") tem o direito absoluto de ser mimada hoje e para o resto da vida.</p>
+                <p><b>CLÁUSULA 2:</b> O contratado ("Guilherme") obriga-se a fornecer cafunés, beijos e comida gostosa sempre que exigido.</p>
+                <p><b>CLÁUSULA 3:</b> Ficam proibidas quaisquer reclamações por parte do contratado ao longo do dia de hoje.</p>
+                <p><b>CLÁUSULA 4:</b> O amor mútuo é obrigatório, irrevogável e pra sempre.</p>
+            </div>
+            <div class="checkbox-container" onclick="assinarContrato()">
+                <input type="checkbox" id="check-contrato" onclick="event.stopPropagation(); assinarContrato(true);">
+                <label style="font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: bold; cursor: pointer;">Li, aceito e exijo os meus direitos.</label>
+            </div>
+            <button id="btn-next-dark" class="btn-comic" onclick="mudarTela('screen-darkness')" style="width: 100%; margin-top: 20px;" disabled>Concluir Assinatura ➔</button>
+        </div>
+    </div>
+
+    <!-- TELA 17: ESCURIDÃO -->
+    <div id="screen-darkness" class="screen" style="background-color: #000; z-index: 9999;">
+        <p style="color: #fff; font-size: clamp(1.8rem, 4vw, 2.5rem); text-align: center; margin-bottom: 40px;">E finalmente..............</p>
+        <button class="btn-comic" style="background: #FFF; color: #000; font-size: clamp(1.5rem, 3vw, 1.8rem);" onclick="mudarTela('screen-final')">💡 Acender a Luz!</button>
+    </div>
+
+    <!-- TELA 18: VARAL FINAL -->
+    <div id="screen-final" class="screen" style="background-color: var(--peanuts-blue); overflow: hidden; padding-top: 130px;">
+        <div class="clothesline-container">
+            <div class="wire"></div>
+            <div class="hanging-photo swing-1" style="left: 8%;"><img src="sua-foto-1.jpg"></div>
+            <div class="hanging-photo swing-2" style="left: 34%;"><img src="sua-foto-2.jpg"></div>
+            <div class="hanging-photo swing-1" style="left: 60%;"><img src="sua-foto-1.jpg"></div>
+            <div class="hanging-photo swing-2" style="left: 84%;"><img src="sua-foto-2.jpg"></div>
+        </div>
+        <div class="comic-panel" style="z-index: 5; border-radius: 35px; background-color: var(--pure-white);">
+            <img src="snoopy-turma.png" style="width: 100%; max-width: 320px; margin-bottom: 20px;">
+            <h2 style="font-size: clamp(2.2rem, 5vw, 3rem);">Feliz Aniversário!</h2>
+            <p style="margin-bottom: 0;">Espero que tenha gostado, prometo fazer mais ideias criativas e legais pra você se sentir amada, você é meu amor todinho. ❤️🥰💖</p>
+        </div>
+        <div class="snoopy-grass"></div>
+    </div>
+
+    <div id="celebration-overlay"></div>
+    <img src="snoopy-dancando.gif" id="snoopy-dance">
+
+    <script>
+        const bgMusic = document.getElementById('musica-ambiente'); bgMusic.volume = 0.3;
+        
+        // SOM DO LATIDO BEM MAIS BAIXO
+        const soundAu = document.getElementById('sound-au');
+        soundAu.volume = 0.08; 
+        
+        const soundCoin = document.getElementById('sound-coin');
+
+        // INICIALIZAÇÃO DE ÁUDIO NO PRIMEIRO TOQUE (Evita bloqueio do navegador)
+        function initAudio() {
+            bgMusic.play().then(() => bgMusic.pause()).catch(()=>{});
+            soundAu.play().then(() => soundAu.pause()).catch(()=>{});
+            soundCoin.play().then(() => soundCoin.pause()).catch(()=>{});
+            window.removeEventListener('touchstart', initAudio);
+            window.removeEventListener('mousedown', initAudio);
+        }
+        window.addEventListener('touchstart', initAudio, {once:true});
+        window.addEventListener('mousedown', initAudio, {once:true});
+
+        function tocarLatidoCurto() {
+            soundAu.currentTime = 0;
+            soundAu.play().catch(()=>{});
+            setTimeout(() => soundAu.pause(), 1000);
+        }
+
+        // CARROSSEL DE APELIDOS
+        const apelidos = ["Mozi", "Mozibete", "Mozilete", "Princesa", "Amor"]; let apelidoIdx = 0;
+        setInterval(() => {
+            const el = document.getElementById('apelidos-carrossel');
+            if (!el) return;
+            el.style.opacity = 0;
+            setTimeout(() => { apelidoIdx = (apelidoIdx + 1) % apelidos.length; el.innerText = apelidos[apelidoIdx]; el.style.opacity = 1; }, 400);
+        }, 3000);
+
+        // SLIDER DE DESBLOQUEIO
+        (function initUnlock() {
+            const slider = document.getElementById('unlock-slider');
+            const thumb = document.getElementById('unlock-thumb');
+            const text = document.getElementById('unlock-text');
+            let dragging = false; let unlocked = false;
+
+            function destravarAgora() {
+                if (unlocked) return; unlocked = true; dragging = false;
+                const max = slider.clientWidth - thumb.offsetWidth - 8;
+                thumb.style.transition = 'left 0.25s ease'; thumb.style.left = max + 'px'; text.style.opacity = 0;
+                bgMusic.play().catch(() => {}); soundCoin.play().catch(() => {});
+                setTimeout(() => mudarTela('screen-biometria'), 350);
+            }
+            function getClientX(e) { return (e.touches && e.touches.length > 0) ? e.touches[0].clientX : e.clientX; }
+            function startDrag(e) { if (unlocked) return; dragging = true; thumb.style.transition = 'none'; }
+            function moveDrag(e) {
+                if (!dragging || unlocked) return;
+                const rect = slider.getBoundingClientRect(); const max = slider.clientWidth - thumb.offsetWidth - 8;
+                let pos = getClientX(e) - rect.left - (thumb.offsetWidth / 2);
+                if (pos < 4) pos = 4; if (pos > max) pos = max;
+                thumb.style.left = pos + 'px'; text.style.opacity = Math.max(0, 1 - (pos / max));
+                if (pos >= max * 0.75) destravarAgora();
+            }
+            function endDrag() {
+                if (!dragging || unlocked) return; dragging = false;
+                thumb.style.transition = 'left 0.3s ease'; thumb.style.left = '4px'; text.style.opacity = 1;
+            }
+
+            thumb.addEventListener('mousedown', startDrag); window.addEventListener('mousemove', moveDrag); window.addEventListener('mouseup', endDrag);
+            thumb.addEventListener('touchstart', startDrag, {passive: true}); window.addEventListener('touchmove', moveDrag, {passive: true}); window.addEventListener('touchend', endDrag);
+            slider.addEventListener('click', destravarAgora);
+        })();
+
+        // NAVEGAÇÃO
+        let chuvaIniciada = false, fofuraIniciada = false, raspadinhaIniciada = false, bioIniciada = false;
+        function mudarTela(idNovaTela) {
+            soundAu.pause(); soundAu.currentTime = 0; 
+            document.querySelectorAll('.screen').forEach(t => t.classList.remove('active'));
+            const alvo = document.getElementById(idNovaTela); if (alvo) alvo.classList.add('active');
+            
+            if (idNovaTela === 'screen-biometria' && !bioIniciada) { bioIniciada = true; initBiometria(); }
+            if (idNovaTela === 'screen-quiz') carregarPergunta();
+            if (idNovaTela === 'screen-regua' && !rulerInterval) iniciarRegua();
+            if (idNovaTela === 'screen-fofurometro' && !fofuraIniciada) { fofuraIniciada = true; initDualFofura(); }
+            if (idNovaTela === 'screen-cupons' && !raspadinhaIniciada) { raspadinhaIniciada = true; initRaspadinhas(); }
+            if (idNovaTela === 'screen-final' && !chuvaIniciada) { chuvaIniciada = true; iniciarChuvaDeFotos(); comemorarGrande(); }
+        }
+
+        function comemorarGrande() {
+            const snoopy = document.getElementById('snoopy-dance'); const overlay = document.getElementById('celebration-overlay');
+            overlay.classList.add('show'); snoopy.classList.add('show');
+            const cores = ['#FFCC00', '#E32636', '#87CEEB', '#FFFFFF', '#4CAF50'];
+            for (let i = 0; i < 35; i++) {
+                let conf = document.createElement('div'); conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + 'vw'; conf.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+                conf.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                document.body.appendChild(conf); setTimeout(() => conf.remove(), 3500);
+            }
+            setTimeout(() => { snoopy.classList.remove('show'); overlay.classList.remove('show'); }, 2400);
+        }
+
+        // BIOMETRIA
+        let bioProgress = 0, bioInterval = null, bioCompleta = false;
+        function initBiometria() {
+            const pad = document.getElementById('scanner-pad'); const fill = document.getElementById('bio-fill'); const statusText = document.getElementById('bio-status-text');
+            function startScan(e) {
+                if (bioCompleta) return; e.preventDefault(); pad.classList.add('scanning');
+                statusText.innerHTML = "Escaneando DNA de Mozibete... <br><b>Mantenha o dedo pressionado!</b>";
+                clearInterval(bioInterval);
+                bioInterval = setInterval(() => {
+                    bioProgress += 3; fill.style.width = Math.min(100, bioProgress) + '%';
+                    if (bioProgress >= 100) {
+                        clearInterval(bioInterval); bioCompleta = true; pad.classList.remove('scanning');
+                        document.getElementById('bio-alert').style.display = 'block'; document.getElementById('btn-next-bio').style.display = 'inline-block';
+                        statusText.innerText = "Resultado da Biometria:"; comemorarGrande();
+                    }
+                }, 55);
+            }
+            function stopScan() {
+                if (bioCompleta) return; pad.classList.remove('scanning'); clearInterval(bioInterval);
+                statusText.innerHTML = "<b style='color:red;'>Leitura interrompida!</b><br>Segure o dedo sem soltar até dar 100%.";
+                bioInterval = setInterval(() => {
+                    if (bioProgress > 0 && !bioCompleta) {
+                        bioProgress -= 3; fill.style.width = Math.max(0, bioProgress) + '%';
+                    } else { clearInterval(bioInterval); }
+                }, 20);
+            }
+            pad.addEventListener('mousedown', startScan); window.addEventListener('mouseup', stopScan); pad.addEventListener('mouseleave', stopScan);
+            pad.addEventListener('touchstart', startScan, {passive: false}); window.addEventListener('touchend', stopScan); window.addEventListener('touchcancel', stopScan);
+        }
+
+        // QUIZ
+        const quizData = [
+            { pergunta: "O que estamos celebrando no dia mais especial do calendário hoje?", opcoes: ["Um dia comum", "O dia em que o mundo ficou mais bonito", "Feriado nacional do dia do pendrive multilaser", "Dia do orgulho mozi"], respostaCorreta: 1, comentario: "Isso mesmo! Hoje o dia é todinho seu, meu amor! 🎉❤️" },
+            { pergunta: "Onde foi que os mozi se beijaram a primeira vez?", opcoes: ["Na caixa d'água da CAESI", "No poço azul", "Debaixo da sombra da cabeça da hiane", "No torneio internacional de briga de mariposa"], respostaCorreta: 1, comentario: "Inesquecível! Foi no Poço Azul que a minha sorte grande começou. 🥰" },
+            { pergunta: "Qual o nome dos nossos cachorrinhos pilantras?", opcoes: ["Henrique e juliano", "Luke e lobinho", "Freud e michael Jackson", "Patixa e malévola"], respostaCorreta: 1, comentario: "A dupla mais fofa e interesseira por petiscos do mundo! 🐾" },
+            { pergunta: "E a pergunta clássica: quem ama mais o mozi?", opcoes: ["O mozibete", "O mozi", "O mozilete", "O mozizinho"], respostaCorreta: 1, comentario: "Sabia que você ia acertar! Eu te amo infinitamente mais! 💖" }
+        ];
+        let indexAtual = 0;
+        function carregarPergunta() {
+            const data = quizData[indexAtual]; document.getElementById('q-text').innerText = data.pergunta;
+            const feedback = document.getElementById('quiz-feedback'); feedback.style.display = 'none';
+            const optionsDiv = document.getElementById('q-options'); optionsDiv.innerHTML = '';
+            data.opcoes.forEach((op, i) => {
+                const btn = document.createElement('button'); btn.className = 'btn-option'; btn.innerText = op;
+                btn.onclick = () => verificarResposta(btn, i === data.respostaCorreta, data.comentario);
+                optionsDiv.appendChild(btn);
+            });
+        }
+        function verificarResposta(btn, isCorreto, comentario) {
+            document.querySelectorAll('#q-options .btn-option').forEach(b => b.style.pointerEvents = 'none');
+            const feedback = document.getElementById('quiz-feedback');
+            if (isCorreto) {
+                btn.classList.add('correct'); feedback.innerText = comentario; feedback.style.display = 'block'; comemorarGrande();
+                setTimeout(() => { indexAtual++; if (indexAtual < quizData.length) carregarPergunta(); else mudarTela('screen-regua'); }, 2500);
+            } else {
+                btn.classList.add('wrong'); feedback.innerText = "Ops! Resposta errada, tente de novo! 😜"; feedback.style.display = 'block';
+                setTimeout(() => carregarPergunta(), 1300);
+            }
+        }
+
+        // RÉGUA
+        let rulerProgress = 0, rulerInterval = null, rulerVenceu = false;
+        function iniciarRegua() {
+            rulerInterval = setInterval(() => {
+                if (rulerVenceu) return clearInterval(rulerInterval);
+                if (rulerProgress > 0) { rulerProgress = Math.max(0, rulerProgress - 1.2); document.getElementById('ruler-fill').style.width = rulerProgress + '%'; }
+            }, 100);
+        }
+        function encherRegua() {
+            if (rulerVenceu) return; rulerProgress += 12;
+            if (rulerProgress >= 100) {
+                rulerProgress = 100; rulerVenceu = true;
+                document.getElementById('btn-hammer').style.display = 'none'; document.getElementById('btn-next-fofura').style.display = 'block'; comemorarGrande();
+            }
+            document.getElementById('ruler-fill').style.width = rulerProgress + '%';
+        }
+
+        // FOFURÔMETRO
+        let fofuraLuke = 0, fofuraLobinho = 0, lukeCompleto = false, lobinhoCompleto = false;
+        function initDualFofura() {
+            const lukeArea = document.getElementById('luke-img-container');
+            const lobinhoArea = document.getElementById('lobinho-img-container');
+            function handleCarinho(e, dog, area) {
+                spawnHeart(area, e);
+                if (dog === 'luke' && !lukeCompleto) {
+                    fofuraLuke += 0.8;
+                    document.getElementById('luke-img').src = 'luke-barriga.png';
+                    if (fofuraLuke >= 100) { fofuraLuke = 100; lukeCompleto = true; lukeArea.classList.add('happy'); checkPortao(); }
+                    document.getElementById('luke-fill').style.width = fofuraLuke + '%';
+                }
+                if (dog === 'lobinho' && !lobinhoCompleto) {
+                    fofuraLobinho += 0.8;
+                    document.getElementById('lobinho-img').src = 'lobinho-barriga.png';
+                    if (fofuraLobinho >= 100) { fofuraLobinho = 100; lobinhoCompleto = true; lobinhoArea.classList.add('happy'); checkPortao(); }
+                    document.getElementById('lobinho-fill').style.width = fofuraLobinho + '%';
+                }
+            }
+            function checkPortao() {
+                if (lukeCompleto && lobinhoCompleto) {
+                    tocarLatidoCurto(); document.getElementById('dogs-speech-bubble').style.display = 'block';
+                    document.getElementById('btn-portao').style.display = 'block'; comemorarGrande();
+                }
+            }
+            function spawnHeart(area, e) {
+                if (Math.random() > 0.8) {
+                    let heart = document.createElement('div'); heart.className = 'tiny-heart'; heart.innerText = "❤️";
+                    const rect = area.getBoundingClientRect();
+                    const x = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+                    const y = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+                    heart.style.left = (x - 10) + 'px'; heart.style.top = (y - 10) + 'px';
+                    area.appendChild(heart); setTimeout(() => heart.remove(), 900);
+                }
+            }
+            lukeArea.addEventListener('touchmove', (e) => { e.preventDefault(); handleCarinho(e, 'luke', lukeArea); }, {passive: false});
+            lukeArea.addEventListener('mousemove', (e) => handleCarinho(e, 'luke', lukeArea));
+            lukeArea.addEventListener('click', (e) => { fofuraLuke += 10; handleCarinho(e, 'luke', lukeArea); });
+            lobinhoArea.addEventListener('touchmove', (e) => { e.preventDefault(); handleCarinho(e, 'lobinho', lobinhoArea); }, {passive: false});
+            lobinhoArea.addEventListener('mousemove', (e) => handleCarinho(e, 'lobinho', lobinhoArea));
+            lobinhoArea.addEventListener('click', (e) => { fofuraLobinho += 10; handleCarinho(e, 'lobinho', lobinhoArea); });
+        }
+
+        // PENSAMENTOS GIGANTES
+        const pensamentosLuke = ["\"espero que me levem pra passear\"", "\"se alguém se abraçar na minha frente eu vou abusar\"", "\"e se eu entrasse em cada quarto 30 vezes agora ?\""];
+        const pensamentosLobinho = ["\"e se.....\"", "\"eu comesse.....\"", "\"uma galinhazinha\""];
+        let pensLukeIdx = 0, pensLobinhoIdx = 0;
+        function avancarPensamento(dog) {
+            tocarLatidoCurto();
+            if (dog === 'luke') {
+                pensLukeIdx++;
+                if (pensLukeIdx < 3) {
+                    document.getElementById('luke-bubble-text').innerText = pensamentosLuke[pensLukeIdx];
+                    document.getElementById('luke-counter-text').innerText = `Toque no card (${pensLukeIdx + 1}/3)`;
+                } else {
+                    document.getElementById('card-luke').className = 'giant-think-card inactive';
+                    document.getElementById('card-lobinho').className = 'giant-think-card active';
+                    document.getElementById('sub-pensamentos-text').innerText = "Agora toque no card para ver os pensamentos do Lobinho!";
+                }
+            } else if (dog === 'lobinho') {
+                pensLobinhoIdx++;
+                if (pensLobinhoIdx < 3) {
+                    document.getElementById('lobinho-bubble-text').innerText = pensamentosLobinho[pensLobinhoIdx];
+                    document.getElementById('lobinho-counter-text').innerText = `Toque no card (${pensLobinhoIdx + 1}/3)`;
+                    if (pensLobinhoIdx === 2) {
+                        document.getElementById('lobinho-think-img').src = 'lobinho-mal.png';
+                        document.getElementById('lobinho-counter-text').innerText = "Olha a carinha dele! (3/3)";
+                        document.getElementById('btn-next-cupons').style.display = 'inline-block';
+                    }
+                }
+            }
+        }
+
+        // RASPADINHAS
+        let cuponsRaspados = 0;
+        function initRaspadinhas() {
+            const covers = document.querySelectorAll('.scratch-cover'); const counterText = document.getElementById('coupon-counter'); const btnNext = document.getElementById('btn-next-elogios');
+            covers.forEach(cover => {
+                let isDrawing = false, scratchCount = 0, finalizado = false;
+                
+                function startDrawing(e) {
+                    if (finalizado || cover.parentElement.classList.contains('locked')) return;
+                    isDrawing = true; cover.style.color = "transparent"; raspar(e);
+                }
+                function stopDrawing() { isDrawing = false; }
+                
+                function raspar(e) {
+                    if (!isDrawing || finalizado || cover.parentElement.classList.contains('locked')) return;
+                    e.preventDefault(); 
+                    const rect = cover.getBoundingClientRect();
+                    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                    const x = clientX - rect.left; const y = clientY - rect.top;
+                    
+                    cover.style.webkitMaskImage = `radial-gradient(circle 35px at ${x}px ${y}px, transparent 100%, black 100%), ` + (cover.style.webkitMaskImage || 'linear-gradient(black, black)');
+                    cover.style.maskImage = `radial-gradient(circle 35px at ${x}px ${y}px, transparent 100%, black 100%), ` + (cover.style.maskImage || 'linear-gradient(black, black)');
+                    cover.style.webkitMaskComposite = "destination-in"; cover.style.maskComposite = "intersect";
+                    
+                    scratchCount++;
+                    if (scratchCount > 40) { 
+                        finalizado = true; cover.classList.add('scratched'); cuponsRaspados++;
+                        let rest = 3 - cuponsRaspados;
+                        if (rest > 0) counterText.innerText = `Você tem mais ${rest} escolha(s).`;
+                        else {
+                            counterText.innerText = "Parabéns mozibete, aproveite seus cupons!"; btnNext.disabled = false; comemorarGrande();
+                            document.querySelectorAll('.scratch-card').forEach(c => { if (!c.querySelector('.scratch-cover').classList.contains('scratched')) { c.classList.add('locked'); c.querySelector('.scratch-cover').innerText = "Bloqueado"; } });
+                        }
+                    }
+                }
+                cover.addEventListener('mousedown', startDrawing); cover.addEventListener('mousemove', raspar); window.addEventListener('mouseup', stopDrawing); cover.addEventListener('mouseleave', stopDrawing);
+                cover.addEventListener('touchstart', startDrawing, {passive: false}); cover.addEventListener('touchmove', raspar, {passive: false}); window.addEventListener('touchend', stopDrawing); window.addEventListener('touchcancel', stopDrawing);
+            });
+        }
+
+        // MÁQUINA DA LUCY
+        function inserirMoedaDireto() {
+            document.getElementById('coin').style.display = 'none'; soundCoin.play().catch(()=>{});
+            document.getElementById('elogio-texto').innerText = "Confie mais em si mesma mozi, não há nada nesse mundo que você não seja capaz de fazer, me provou isso muitas vezes, você é maravilhosa!!";
+            document.getElementById('receipt').classList.add('show'); comemorarGrande();
+        }
+
+        // CAÇA-NÍQUEIS
+        const f1 = ["Eu amo...", "Sou louco por...", "Meu coração acelera com...", "Sou viciado em..."];
+        const f2 = ["o seu sorriso lindo...", "o seu cheirinho...", "o seu abraço apertado...", "o seu jeitinho de brava..."];
+        const f3 = ["todos os dias.", "logo pela manhã.", "sempre que te vejo.", "pra sempre."];
+        function girarSlots() {
+            document.getElementById('btn-girar-slots').style.display = 'none'; soundCoin.play().catch(()=>{});
+            let c = 0; let iv = setInterval(() => {
+                document.getElementById('slot1').innerText = f1[Math.floor(Math.random()*f1.length)];
+                document.getElementById('slot2').innerText = f2[Math.floor(Math.random()*f2.length)];
+                document.getElementById('slot3').innerText = f3[Math.floor(Math.random()*f3.length)];
+                if (++c > 20) { clearInterval(iv); document.getElementById('btn-next-slots').style.display = 'inline-block'; }
+            }, 80);
+        }
+
+        // VITROLA E CORREIO
+        function tocarMusica() {
+            const audioGal = document.getElementById('musica-casal'); const btn = document.getElementById('btn-play'); const disco = document.getElementById('disco'); const agulha = document.getElementById('agulha');
+            if (audioGal.paused) { bgMusic.pause(); audioGal.play().catch(()=>{}); btn.innerHTML = "⏸️ Pausar Música"; agulha.classList.add('play'); disco.classList.add('spin'); } 
+            else { audioGal.pause(); bgMusic.play().catch(()=>{}); btn.innerHTML = "▶ Tocar Nossa Música"; agulha.classList.remove('play'); disco.classList.remove('spin'); }
+        }
+        function abrirCorreio() {
+            document.getElementById('mail-grid').classList.add('show');
+            document.getElementById('btn-next-laudo').style.display = 'inline-block'; comemorarGrande();
+        }
+
+        // BOLO E MICROFONE
+        let velaApagada = false, audioCtxMic = null, micStream = null;
+        async function ativarMicrofoneBolo() {
+            if (velaApagada) return;
+            const btnMic = document.getElementById('btn-mic'); const meterBox = document.getElementById('mic-meter-box'); const meterBar = document.getElementById('mic-meter-bar');
+            try {
+                micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioCtxMic = new (window.AudioContext || window.webkitAudioContext)();
+                const source = audioCtxMic.createMediaStreamSource(micStream);
+                const analyser = audioCtxMic.createAnalyser(); analyser.fftSize = 256; source.connect(analyser);
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                btnMic.innerText = "🌬️ Assopre bem forte agora!"; meterBox.style.display = "block";
+                function monitorar() {
+                    if (velaApagada) return; analyser.getByteFrequencyData(dataArray);
+                    let soma = 0; for (let i = 0; i < 25; i++) soma += dataArray[i];
+                    let media = soma / 25; meterBar.style.width = Math.min(100, (media / 110) * 100) + '%';
+                    if (media > 105) apagarVela(); else requestAnimationFrame(monitorar);
+                }
+                monitorar();
+            } catch (e) { btnMic.innerText = "Toque direto no bolo para apagar a vela! 🎂"; }
+        }
+        function apagarVela() {
+            if (velaApagada) return; velaApagada = true;
+            if (micStream) micStream.getTracks().forEach(t => t.stop());
+            document.getElementById('candle-flame').classList.add('blown-out');
+            document.getElementById('btn-mic').style.display = 'none'; document.getElementById('mic-meter-box').style.display = 'none';
+            document.getElementById('bolo-instrucao').innerHTML = "<b style='color:var(--peanuts-green);'>✨ Pedido enviado para o universo! ✨</b>";
+            document.getElementById('btn-next-carta').style.display = 'inline-block'; comemorarGrande();
+        }
+
+        // CONTRATO E CHUVA FINAL
+        function assinarContrato(fromInput) {
+            const cb = document.getElementById('check-contrato');
+            if (!fromInput) cb.checked = !cb.checked;
+            document.getElementById('btn-next-dark').disabled = !cb.checked;
+        }
+        function iniciarChuvaDeFotos() {
+            setInterval(() => {
+                let foto = document.createElement('img'); foto.src = Math.random() > 0.5 ? 'sua-foto-1.jpg' : 'sua-foto-2.jpg';
+                foto.className = 'falling-photo'; foto.style.left = Math.random() * 95 + 'vw'; foto.style.top = '-80px';
+                document.getElementById('screen-final').appendChild(foto);
+                setTimeout(() => { foto.style.top = '115vh'; foto.style.transform = `rotate(${Math.random() * 360}deg)`; }, 50); setTimeout(() => foto.remove(), 12000);
+            }, 1100);
+        }
+    </script>
+</body>
+</html>
