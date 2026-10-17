@@ -37,7 +37,6 @@
         
         .charlie-zigzag { position: absolute; bottom: 0; left: 0; width: 100%; height: 35px; background: linear-gradient(135deg, var(--ink-black) 25%, transparent 25%) -17px 0, linear-gradient(225deg, var(--ink-black) 25%, transparent 25%) -17px 0, linear-gradient(315deg, var(--ink-black) 25%, transparent 25%), linear-gradient(45deg, var(--ink-black) 25%, transparent 25%); background-size: 35px 35px; opacity: 0.1; pointer-events: none; z-index: 0; }
         
-        /* PAINEL PRINCIPAL (ADAPTÁVEL) */
         .comic-panel { 
             border: 5px solid var(--ink-black); border-radius: 15px; 
             box-shadow: 6px 6px 0px rgba(0,0,0,0.25); padding: 20px 15px; 
@@ -54,13 +53,11 @@
         .btn-comic:active { transform: translate(5px, 5px); box-shadow: 0px 0px 0px var(--ink-black); }
         .btn-comic:disabled { background: #999; cursor: not-allowed; transform: translate(5px, 5px); box-shadow: none; color: #ccc;}
 
-        /* SLIDER */
         .unlock-slider { width: 100%; max-width: 400px; height: 70px; background: #FFF9C4; border: 4px solid var(--ink-black); border-radius: 40px; position: relative; margin: 0 auto; box-shadow: inset 0 5px 10px rgba(0,0,0,0.2); display: flex; align-items: center; overflow: hidden; }
         .unlock-thumb { width: 60px; height: 60px; background: var(--peanuts-red); border-radius: 50%; border: 4px solid var(--ink-black); position: absolute; left: 3px; display: flex; align-items: center; justify-content: center; z-index: 5; box-shadow: 3px 3px 0 var(--ink-black); touch-action: none; }
         .unlock-arrow-css { width: 14px; height: 14px; border-top: 4px solid var(--pure-white); border-right: 4px solid var(--pure-white); transform: rotate(45deg); margin-right: 4px; }
         .unlock-text { position: absolute; width: 100%; text-align: center; font-size: clamp(1.1rem, 3vw, 1.4rem); color: var(--ink-black); z-index: 2; pointer-events: none; text-transform: uppercase; padding-left: 25px; transition: opacity 0.2s ease;}
 
-        /* BIOMETRIA */
         .scanner-pad { width: 120px; height: 140px; background: #222; border: 5px solid var(--ink-black); border-radius: 25px; margin: 15px auto; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 5px 5px 0px var(--ink-black), inset 0 0 20px rgba(0, 176, 255, 0.4); }
         .fingerprint-icon { width: 70px; filter: drop-shadow(0 0 8px var(--peanuts-blue)); pointer-events: none; }
         .scan-laser { position: absolute; top: 0; left: 0; width: 100%; height: 5px; background: var(--peanuts-green); box-shadow: 0 0 15px var(--peanuts-green); display: none; z-index: 3; }
@@ -68,8 +65,8 @@
         @keyframes scanLaserMove { 0% { top: 5%; } 100% { top: 90%; } }
         .bio-meter { width: 100%; height: 30px; border: 4px solid var(--ink-black); border-radius: 15px; overflow: hidden; margin: 15px 0; }
         .bio-fill { width: 0%; height: 100%; background: linear-gradient(90deg, var(--peanuts-blue), var(--peanuts-green), var(--peanuts-red)); transition: width 0.1s linear; }
+        .bio-alert { display: none; background: var(--peanuts-red); color: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 12px; padding: 15px; margin-top: 15px; font-size: clamp(1.1rem, 2vw, 1.3rem); box-shadow: 5px 5px 0 var(--ink-black); }
 
-        /* JORNAL */
         .jornal-panel { background: #Fdfdfd; font-family: 'Times New Roman', Times, serif; border: 5px solid var(--ink-black); border-radius: 5px; box-shadow: 6px 6px 0px rgba(0,0,0,0.25); padding: 20px; width: 100%; max-width: 650px; z-index: 10; margin: auto; text-align: center;}
         .jornal-header { font-size: clamp(2.2rem, 8vw, 3.5rem); text-transform: uppercase; border-bottom: 4px solid var(--ink-black); margin-bottom: 8px; font-weight: 900; }
         .jornal-sub { font-size: clamp(1rem, 2.5vw, 1.2rem); border-bottom: 2px solid var(--ink-black); padding-bottom: 8px; margin-bottom: 12px; font-style: italic; }
@@ -77,13 +74,11 @@
         .jornal-texto { font-size: clamp(1.1rem, 3.5vw, 1.3rem); line-height: 1.4; text-align: justify; }
         @media (min-width: 600px) { .jornal-texto { columns: 2; gap: 20px; } }
 
-        /* QUIZ */
         .btn-option { background: var(--pure-white); border: 4px solid var(--ink-black); padding: 12px 15px; font-family: 'Balsamiq Sans', cursive; font-size: clamp(1.1rem, 3vw, 1.25rem); font-weight: bold; border-radius: 12px; box-shadow: 4px 4px 0px var(--ink-black); width: 100%; margin-bottom: 10px; text-align: left; }
         .btn-option.correct { background: var(--peanuts-green); color: var(--pure-white); } 
         .btn-option.wrong { background: var(--peanuts-red); color: var(--pure-white); }
         .speech-bubble { background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 20px; padding: 15px; position: relative; margin-bottom: 20px; box-shadow: 4px 4px 0px var(--ink-black); }
         
-        /* RÉGUA */
         .ruler-container { width: 100%; height: 60px; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 12px; margin: 20px auto; position: relative; overflow: hidden; box-shadow: 4px 4px 0 var(--ink-black); }
         .ruler-fill { position: absolute; top: 0; left: 0; width: 0%; height: 100%; background: var(--peanuts-green); transition: width 0.1s linear; border-right: 3px solid var(--ink-black); }
         .ruler-marks { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: space-between; pointer-events: none; }
@@ -91,11 +86,18 @@
         .ruler-marks .mark:first-child { border-left: none; }
         .ruler-marks .mark.final { flex: 1.5; color: var(--peanuts-red); text-transform: uppercase; font-size: clamp(1rem, 3vw, 1.4rem); justify-content: center; align-items: center; text-align: center; border-left: 4px solid var(--ink-black); background: rgba(255,255,255,0.7); }
 
-        /* FOFURÔMETRO RESPONSIVO */
+        .bg-pet-decor { position: absolute; opacity: 0.9; z-index: 0; pointer-events: none; filter: drop-shadow(5px 5px 0px rgba(0,0,0,0.4)); }
         .fofura-container { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; width: 100%; gap: 15px; margin: 15px 0; }
         .dog-card { flex: 1; min-width: 130px; display: flex; flex-direction: column; background: var(--peanuts-blue); border: 5px solid var(--ink-black); border-radius: 15px; padding: 12px; box-shadow: 5px 5px 0 var(--ink-black); position: relative; }
         .dog-name-tag { position: absolute; top: -15px; left: -5px; background: var(--peanuts-yellow); border: 3px solid var(--ink-black); border-radius: 10px; padding: 4px 12px; font-size: clamp(1.1rem, 3vw, 1.3rem); box-shadow: 3px 3px 0 var(--ink-black); z-index: 5; }
-        .dog-photo-area { width: 100%; background-color: var(--pure-white); border: 3px dashed var(--ink-black); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 12px 0; height: 20vh; min-height: 140px; position: relative; }
+        
+        /* Fofurômetro: Touch-action none para bloquear a tela de se mexer */
+        .dog-photo-area { 
+            width: 100%; background-color: var(--pure-white); border: 3px dashed var(--ink-black); 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; 
+            margin: 12px 0; height: 20vh; min-height: 140px; position: relative; 
+            touch-action: none; 
+        }
         .dog-img { max-height: 90%; max-width: 90%; object-fit: contain; pointer-events: none; }
         .dog-photo-area.happy .dog-img { transform: scale(1.06); animation: jump 0.5s ease infinite alternate; }
         @keyframes jump { 0% { transform: translateY(0) scale(1.06); } 100% { transform: translateY(-8px) scale(1.06); } }
@@ -104,7 +106,6 @@
         .tiny-heart { position: absolute; color: var(--peanuts-red); font-size: 2rem; animation: floatHeart 0.9s ease-out forwards; pointer-events: none; z-index: 10; }
         @keyframes floatHeart { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-50px) scale(1.4); opacity: 0; } }
 
-        /* PENSAMENTOS GIGANTES (Ajuste para Mobile) */
         .giant-cards-container { 
             width: 100%; max-width: 480px; margin: 15px auto; 
             position: relative; height: 55vh; min-height: 400px; 
@@ -128,7 +129,6 @@
         .giant-img-wrapper { width: 100%; flex-grow: 1; max-height: 40vh; background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 10px; }
         .giant-img-wrapper img { max-height: 100%; max-width: 100%; object-fit: contain; }
 
-        /* CUPONS & SLOTS */
         .coupons-grid { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; width: 100%; }
         .scratch-card { position: relative; width: 100%; height: 65px; background: var(--peanuts-yellow); border: 4px solid var(--ink-black); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: 4px 4px 0px rgba(0,0,0,0.3); }
         .scratch-prize { position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: clamp(1.1rem, 3vw, 1.4rem); z-index: 1; text-transform: uppercase; }
@@ -141,32 +141,6 @@
         .slot-machine-container { display: flex; flex-direction: column; gap: 10px; margin: 20px auto; width: 100%; max-width: 300px;}
         .slot-window { background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 12px; padding: 15px; font-size: clamp(1.3rem, 4vw, 1.6rem); min-height: 70px; display: flex; align-items: center; justify-content: center; color: var(--peanuts-red); }
 
-        /* MOSAICO DE CORAÇÃO */
-        .heart-mosaic-wrapper {
-            width: 100%; max-width: 280px; aspect-ratio: 1 / 1; margin: 15px auto;
-            position: relative; filter: drop-shadow(5px 5px 0px var(--ink-black));
-        }
-        .heart-shape-container {
-            width: 100%; height: 100%; position: relative;
-            background: url('sua-foto-1.jpg') center/cover no-repeat;
-            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 28 C16 28 4 18 4 9 C4 4 10 2 16 8 C22 2 28 4 28 9 C28 18 16 28 16 28 Z" fill="black"/></svg>');
-            -webkit-mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; -webkit-mask-position: center;
-            mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><path d="M16 28 C16 28 4 18 4 9 C4 4 10 2 16 8 C22 2 28 4 28 9 C28 18 16 28 16 28 Z" fill="black"/></svg>');
-            mask-size: 100% 100%; mask-repeat: no-repeat; mask-position: center;
-        }
-        .heart-grid {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(4, 1fr);
-            z-index: 2; transition: opacity 1.5s ease;
-        }
-        .heart-grid.finished { opacity: 0; pointer-events: none; }
-        .mosaic-tile {
-            background-color: var(--pure-white); border: 1px solid #ddd; display: flex; align-items: center; justify-content: center;
-            font-size: clamp(1rem, 3vw, 1.4rem); color: #bbb; transition: all 0.3s ease;
-        }
-        .mosaic-tile.revealed { background-color: var(--peanuts-red); border-color: var(--peanuts-red); color: transparent; }
-        
-        /* VITROLA RESPONSIVA */
         .vitrola-container { 
             position: relative; width: 100%; max-width: 260px; aspect-ratio: 1/1; height: auto; margin: 15px auto; 
             background: linear-gradient(145deg, #a05a2c 0%, #6b3a17 100%);
@@ -183,7 +157,7 @@
         .vinyl.spin { animation: spinVinyl 3s linear infinite; }
         @keyframes spinVinyl { 100% { transform: rotate(360deg); } }
 
-        /* OUTROS PAINÉIS */
+        #screen-correio .comic-panel { background-color: #ADD8E6; border-color: var(--ink-black); }
         .mail-grid { display: none; flex-direction: column; gap: 15px; margin-top: 15px; width: 100%; }
         .mail-grid.show { display: flex; }
         .envelope { width: 100%; height: 100px; position: relative; transition: transform 0.6s; transform-style: preserve-3d; }
@@ -421,33 +395,11 @@
                 <div class="slot-window" id="slot3">EM VOCÊ!</div>
             </div>
             <button class="btn-comic" id="btn-girar-slots" onclick="girarSlots()" style="background: var(--peanuts-green);">Girar a Roleta!</button>
-            <button class="btn-comic" id="btn-next-slots" onclick="mudarTela('screen-mosaico')" style="display: none; background: var(--peanuts-blue);">Descobrir Motivos Secretos ➔</button>
+            <button class="btn-comic" id="btn-next-slots" onclick="mudarTela('screen-music')" style="display: none; background: var(--peanuts-blue);">Avançar para a Música ➔</button>
         </div>
     </div>
 
-    <!-- TELA 11: MOSAICO DE CORAÇÃO -->
-    <div id="screen-mosaico" class="screen" style="background-color: var(--peanuts-pink);">
-        <div class="charlie-zigzag"></div>
-        <div class="comic-panel" style="background-color: var(--pure-white);">
-            <h2>Coração de Segredos ❤️</h2>
-            <p>Toque nas peças brancas para montá-lo e revelar os motivos!</p>
-            
-            <div class="heart-mosaic-wrapper">
-                <div class="heart-shape-container">
-                    <div class="heart-grid" id="heart-grid">
-                        <div class="mosaic-tile" onclick="revelarCoracao(this, 0)">1</div><div class="mosaic-tile" onclick="revelarCoracao(this, 1)">2</div><div class="mosaic-tile" onclick="revelarCoracao(this, 2)">3</div><div class="mosaic-tile" onclick="revelarCoracao(this, 3)">4</div>
-                        <div class="mosaic-tile" onclick="revelarCoracao(this, 4)">5</div><div class="mosaic-tile" onclick="revelarCoracao(this, 5)">6</div><div class="mosaic-tile" onclick="revelarCoracao(this, 6)">7</div><div class="mosaic-tile" onclick="revelarCoracao(this, 7)">8</div>
-                        <div class="mosaic-tile" onclick="revelarCoracao(this, 8)">9</div><div class="mosaic-tile" onclick="revelarCoracao(this, 9)">10</div><div class="mosaic-tile" onclick="revelarCoracao(this, 10)">11</div><div class="mosaic-tile" onclick="revelarCoracao(this, 11)">12</div>
-                        <div class="mosaic-tile" onclick="revelarCoracao(this, 12)">13</div><div class="mosaic-tile" onclick="revelarCoracao(this, 13)">14</div><div class="mosaic-tile" onclick="revelarCoracao(this, 14)">15</div><div class="mosaic-tile" onclick="revelarCoracao(this, 15)">16</div>
-                    </div>
-                </div>
-            </div>
-            <div class="mosaic-reason-box" id="mosaic-reason-box">Toque no número 1 para começar...</div>
-            <button id="btn-next-mosaico" class="btn-comic" onclick="mudarTela('screen-music')" style="display: none; background: var(--peanuts-green);">Coração Completo! Avançar ➔</button>
-        </div>
-    </div>
-
-    <!-- TELA 12: VITROLA -->
+    <!-- TELA 11: VITROLA -->
     <div id="screen-music" class="screen" style="background-color: var(--peanuts-green);">
         <div class="charlie-zigzag"></div>
         <div class="comic-panel" style="background-color: var(--pure-white);">
@@ -464,7 +416,7 @@
         </div>
     </div>
 
-    <!-- TELA 13: CORREIO -->
+    <!-- TELA 12: CORREIO -->
     <div id="screen-correio" class="screen" style="background-color: var(--peanuts-blue);">
         <div class="charlie-zigzag"></div>
         <div class="comic-panel">
@@ -480,7 +432,7 @@
         </div>
     </div>
 
-    <!-- TELA 14: LAUDO -->
+    <!-- TELA 13: LAUDO -->
     <div id="screen-laudo" class="screen" style="background-color: var(--peanuts-yellow);">
         <div class="charlie-zigzag"></div>
         <div class="comic-panel" style="background-color: var(--pure-white);">
@@ -499,7 +451,7 @@
         </div>
     </div>
 
-    <!-- TELA 15: BOLO -->
+    <!-- TELA 14: BOLO -->
     <div id="screen-bolo" class="screen" style="background-color: var(--peanuts-orange);">
         <div class="charlie-zigzag"></div>
         <div class="comic-panel" style="background-color: var(--pure-white);">
@@ -525,7 +477,7 @@
         </div>
     </div>
 
-    <!-- TELA 16: CARTA -->
+    <!-- TELA 15: CARTA -->
     <div id="screen-carta-gui" class="screen" style="background-color: var(--peanuts-blue);">
         <div class="charlie-zigzag"></div>
         <div class="comic-panel" style="background-color: var(--pure-white);">
@@ -541,13 +493,13 @@
         </div>
     </div>
 
-    <!-- TELA 17: CONTRATO -->
+    <!-- TELA 16: CONTRATO -->
     <div id="screen-contrato" class="screen" style="background-color: var(--peanuts-green);">
         <div class="charlie-zigzag"></div>
         <div class="comic-panel" style="background-color: var(--pure-white);">
             <div class="contrato-box">
                 <h3 style="text-align:center; margin-bottom:10px; font-size: clamp(1.1rem, 3vw, 1.4rem);">CONTRATO OFICIAL DE ANIVERSÁRIO</h3>
-                <p><b>CLÁUSULA 1:</b> A aniversariante tem o direito absoluto de ser mimada hoje e para sempre.</p>
+                <p><b>CLÁUSULA 1:</b> A aniversariante tem o direito absoluto de ser mimada hoje e para o resto da vida.</p>
                 <p><b>CLÁUSULA 2:</b> O contratado obriga-se a fornecer cafunés e comida sempre que exigido.</p>
                 <p><b>CLÁUSULA 3:</b> Ficam proibidas reclamações por parte do contratado no dia de hoje.</p>
                 <p><b>CLÁUSULA 4:</b> O amor mútuo é obrigatório, irrevogável e pra sempre.</p>
@@ -560,13 +512,13 @@
         </div>
     </div>
 
-    <!-- TELA 18: ESCURIDÃO -->
+    <!-- TELA 17: ESCURIDÃO -->
     <div id="screen-darkness" class="screen" style="background-color: #000; z-index: 9999;">
         <p style="color: #fff; font-size: clamp(1.8rem, 5vw, 2.5rem); text-align: center; margin-bottom: 40px;">E finalmente..............</p>
         <button class="btn-comic" style="background: #FFF; color: #000; font-size: clamp(1.5rem, 4vw, 1.8rem);" onclick="mudarTela('screen-final')">💡 Acender a Luz!</button>
     </div>
 
-    <!-- TELA 19: VARAL FINAL -->
+    <!-- TELA 18: VARAL FINAL -->
     <div id="screen-final" class="screen" style="background-color: var(--peanuts-blue); overflow: hidden; padding-top: 15vh;">
         <div class="clothesline-container">
             <div class="wire"></div>
@@ -592,7 +544,7 @@
         const soundCoin = document.getElementById('sound-coin');
         const musicaCasal = document.getElementById('musica-casal');
 
-        // INICIALIZAÇÃO "AGRESSIVA" DE ÁUDIO NO PRIMEIRO TOQUE (Evita lentidão)
+        // INICIALIZAÇÃO "AGRESSIVA" DE ÁUDIO NO PRIMEIRO TOQUE
         function initAudio() {
             const audios = [bgMusic, soundAu, soundCoin, musicaCasal];
             audios.forEach(a => {
@@ -673,7 +625,8 @@
                 conf.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
                 document.body.appendChild(conf); setTimeout(() => conf.remove(), 3500);
             }
-            setTimeout(() => { snoopy.classList.remove('show'); overlay.classList.remove('show'); }, 2400);
+            // TEMPO DO SNOOPY REDUZIDO
+            setTimeout(() => { snoopy.classList.remove('show'); overlay.classList.remove('show'); }, 1400);
         }
 
         // BIOMETRIA
@@ -835,16 +788,8 @@
             document.getElementById('btn-girar-slots').style.display = 'none'; soundCoin.play().catch(()=>{});
             let c = 0; let iv = setInterval(() => {
                 document.getElementById('slot1').innerText = f1[Math.floor(Math.random()*f1.length)]; document.getElementById('slot2').innerText = f2[Math.floor(Math.random()*f2.length)]; document.getElementById('slot3').innerText = f3[Math.floor(Math.random()*f3.length)];
-                if (++c > 20) { clearInterval(iv); document.getElementById('btn-next-slots').style.display = 'inline-block'; comemorarGrande(); }
+                if (++c > 20) { clearInterval(iv); document.getElementById('btn-next-slots').style.display = 'inline-block'; }
             }, 80);
-        }
-
-        // MOSAICO CORAÇÃO GIGANTE
-        const motivosSecretos = ["Amo o jeitinho que os seus olhos brilham.", "Amo a voz fininha com os cachorros.", "Amo o seu abraço seguro.", "Amo a sua mania de ajeitar o cabelo.", "Amo a carinha de brava que dura 5s.", "Amo a paz de estar com você.", "Amo a sua força e inteligência.", "Amo a mulher gigante que você é.", "Amo seu sorriso bobo.", "Amo te ouvir falar.", "Amo as piadas ruins.", "Amo sonhar junto.", "Amo acordar com você.", "Amo nossa parceria.", "Amo nossa família.", "Amo você inteirinha!"];
-        let pecasRev = 0;
-        function revelarCoracao(el, idx) {
-            if (el.classList.contains('revealed')) return; el.classList.add('revealed'); pecasRev++; document.getElementById('mosaic-reason-box').innerText = motivosSecretos[idx];
-            if (pecasRev >= 16) { setTimeout(() => { document.getElementById('heart-grid').classList.add('finished'); document.getElementById('btn-next-mosaico').style.display = 'inline-block'; document.getElementById('mosaic-reason-box').innerText = "Você é o amor da minha vida! ❤️"; comemorarGrande(); }, 800); }
         }
 
         // VITROLA E CORREIO
