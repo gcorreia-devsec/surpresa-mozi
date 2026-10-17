@@ -17,7 +17,7 @@
         }
         * { margin: 0; padding: 0; box-sizing: border-box; max-width: 100%; }
         
-        body, a, button, .btn-comic, .dog-photo-area, .coin, .scratch-cover, .envelope, #mailbox-container, #cake-wrapper, .scanner-pad, .mosaic-tile, .giant-think-card, .unlock-slider, .unlock-thumb {
+        body, a, button, .btn-comic, .dog-photo-area, .coin, .scratch-cover, .envelope, #mailbox-container, #cake-wrapper, .scanner-pad, .giant-think-card, .unlock-slider, .unlock-thumb {
             cursor: url('patinha-cursor.png'), pointer !important;
         }
         body {
@@ -25,6 +25,19 @@
             overflow-x: hidden; font-weight: 700; background-color: var(--peanuts-yellow);
             touch-action: pan-y; user-select: none; -webkit-user-select: none; width: 100vw;
         }
+
+        /* TELA DE CARREGAMENTO */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: var(--peanuts-yellow); z-index: 999999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+        .loading-snoopy { width: 150px; margin-bottom: 20px; animation: pulseLoad 1.5s infinite; filter: drop-shadow(4px 4px 0px rgba(0,0,0,0.2)); }
+        @keyframes pulseLoad { 0% { transform: scale(1); } 50% { transform: scale(1.08); } 100% { transform: scale(1); } }
+        .loading-bar-container { width: 80%; max-width: 300px; height: 15px; border: 4px solid var(--ink-black); border-radius: 15px; background: var(--pure-white); overflow: hidden; margin-top: 15px; box-shadow: 4px 4px 0px rgba(0,0,0,0.2); }
+        #loading-bar { width: 0%; height: 100%; background: var(--peanuts-red); transition: width 0.3s ease; }
+
         .screen { 
             position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; 
             display: none; flex-direction: column; align-items: center; justify-content: center; 
@@ -91,7 +104,6 @@
         .dog-card { flex: 1; min-width: 130px; display: flex; flex-direction: column; background: var(--peanuts-blue); border: 5px solid var(--ink-black); border-radius: 15px; padding: 12px; box-shadow: 5px 5px 0 var(--ink-black); position: relative; }
         .dog-name-tag { position: absolute; top: -15px; left: -5px; background: var(--peanuts-yellow); border: 3px solid var(--ink-black); border-radius: 10px; padding: 4px 12px; font-size: clamp(1.1rem, 3vw, 1.3rem); box-shadow: 3px 3px 0 var(--ink-black); z-index: 5; }
         
-        /* Fofurômetro: Touch-action none para bloquear a tela de se mexer */
         .dog-photo-area { 
             width: 100%; background-color: var(--pure-white); border: 3px dashed var(--ink-black); 
             border-radius: 12px; display: flex; align-items: center; justify-content: center; 
@@ -137,7 +149,10 @@
         
         .booth { position: relative; margin: 15px auto 80px auto; width: 100%; max-width: 250px; }
         .booth img { width: 100%; display: block; }
+        .slot { width: 80px; height: 22px; background: #222; border-radius: 10px; border: 4px solid var(--ink-black); position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 5; }
         .coin { width: 60px; height: 60px; background: var(--peanuts-yellow); border: 4px solid var(--ink-black); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; position: absolute; bottom: -70px; left: 50%; transform: translateX(-50%); box-shadow: 3px 3px 0 var(--ink-black); z-index: 10; }
+        .receipt { background: var(--pure-white); border: 4px dashed var(--ink-black); padding: 20px; margin-top: 15px; display: none; font-size: clamp(1.2rem, 2vw, 1.4rem); box-shadow: 6px 6px 0 var(--ink-black);}
+        .receipt.show { display: block; margin-bottom: 20px;}
         .slot-machine-container { display: flex; flex-direction: column; gap: 10px; margin: 20px auto; width: 100%; max-width: 300px;}
         .slot-window { background: var(--pure-white); border: 4px solid var(--ink-black); border-radius: 12px; padding: 15px; font-size: clamp(1.3rem, 4vw, 1.6rem); min-height: 70px; display: flex; align-items: center; justify-content: center; color: var(--peanuts-red); }
 
@@ -183,12 +198,15 @@
         .contrato-box { background: #fffae6; border: 4px double var(--ink-black); border-radius: 8px; padding: 15px; font-family: 'Courier New', monospace; text-align: justify; margin-bottom: 15px; }
         .contrato-box p { font-size: clamp(1rem, 3vw, 1.2rem); margin-bottom: 8px; }
         
-        .clothesline-container { position: absolute; top: 6%; left: 0; width: 100%; height: 140px; z-index: 2; pointer-events: none; }
-        .wire { position: absolute; top: 25px; left: 0; width: 100%; height: 20px; border-bottom: 4px solid var(--ink-black); border-radius: 50%; }
-        .hanging-photo { position: absolute; top: 25px; width: 20vw; max-width: 90px; aspect-ratio: 3/4; background: #fff; padding: 5px 5px 15px 5px; box-shadow: 4px 4px 0px rgba(0,0,0,0.4); border: 2px solid var(--ink-black); transform-origin: top center; }
-        .hanging-photo img { width: 100%; height: 100%; object-fit: cover; border: 2px solid var(--ink-black);}
+        /* NOVO VARAL - ESPAÇO PARA 5 FOTOS LADO A LADO */
+        .clothesline-container { position: absolute; top: 4%; left: 0; width: 100%; height: 160px; z-index: 2; pointer-events: none; }
+        .wire { position: absolute; top: 20px; left: -5%; width: 110%; height: 30px; border-bottom: 4px solid var(--ink-black); border-radius: 50%; }
+        .photos-wrapper { position: absolute; top: 20px; left: 0; width: 100%; display: flex; justify-content: space-evenly; padding: 0 1%; }
+        .hanging-photo { width: 17vw; max-width: 90px; aspect-ratio: 3/4; background: #fff; padding: 4px 4px 16px 4px; box-shadow: 4px 4px 0px rgba(0,0,0,0.4); border: 2px solid var(--ink-black); transform-origin: top center; }
+        .hanging-photo img { width: 100%; height: 100%; object-fit: cover; border: 2px solid var(--ink-black); background-color: #ddd;}
+        
         .swing-1 { animation: swing 4s ease-in-out infinite alternate; } .swing-2 { animation: swing 5s ease-in-out infinite alternate-reverse; }
-        @keyframes swing { 0% { transform: rotate(-5deg); } 100% { transform: rotate(5deg); } }
+        @keyframes swing { 0% { transform: rotate(-6deg); } 100% { transform: rotate(6deg); } }
         
         #celebration-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.7); z-index: 9998; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         #celebration-overlay.show { opacity: 1; }
@@ -204,7 +222,16 @@
 </head>
 <body>
 
-    <!-- PRELOAD ATIVADO PARA ÁUDIOS -->
+    <!-- TELA DE CARREGAMENTO (PRELOADER) -->
+    <div id="loading-screen">
+        <img src="snoopy-dormindo.png" class="loading-snoopy" alt="Carregando">
+        <h2 style="color: var(--ink-black); font-size: clamp(1.5rem, 4vw, 2rem); text-transform: uppercase;">Carregando a surpresa...</h2>
+        <div class="loading-bar-container">
+            <div id="loading-bar"></div>
+        </div>
+    </div>
+
+    <!-- ÁUDIOS -->
     <audio id="musica-ambiente" loop preload="auto"><source src="ambientacao.mp3" type="audio/mpeg"></audio>
     <audio id="sound-au" preload="auto"><source src="auau.mp3" type="audio/mpeg"></audio>
     <audio id="sound-coin" preload="auto"><source src="coin.mp3" type="audio/mpeg"></audio>
@@ -406,7 +433,13 @@
             <h2>Nossa Trilha Sonora 🎵</h2>
             <div class="vitrola-container">
                 <div class="vitrola-platter"></div>
-                <div class="vinyl" id="disco"><div class="vinyl-label">Amor<br>Eterno<div class="vinyl-hole"></div></div></div>
+                <div class="vinyl" id="disco">
+                    <div class="vinyl-label">
+                        <span style="margin-bottom: auto;">Amor</span>
+                        <div class="vinyl-hole"></div>
+                        <span style="margin-top: auto;">Eterno</span>
+                    </div>
+                </div>
                 <div class="tonearm-base"></div>
                 <div class="tonearm" id="agulha"></div>
             </div>
@@ -435,7 +468,7 @@
     <!-- TELA 13: LAUDO -->
     <div id="screen-laudo" class="screen" style="background-color: var(--peanuts-yellow);">
         <div class="charlie-zigzag"></div>
-        <div class="comic-panel" style="background-color: var(--pure-white);">
+        <div class="comic-panel" style="max-width: 800px; background-color: var(--pure-white);">
             <h2>Laudo do Paciente</h2>
             <div class="laudo-wrapper">
                 <div class="snoopy-psi-img"><img src="snoopy-psicologo.png" alt="Doutor Snoopy"></div>
@@ -519,18 +552,24 @@
     </div>
 
     <!-- TELA 18: VARAL FINAL -->
-    <div id="screen-final" class="screen" style="background-color: var(--peanuts-blue); overflow: hidden; padding-top: 15vh;">
+    <div id="screen-final" class="screen" style="background-color: var(--peanuts-blue); overflow: hidden; padding-top: 18vh;">
+        
         <div class="clothesline-container">
             <div class="wire"></div>
-            <div class="hanging-photo swing-1" style="left: 8%;"><img src="sua-foto-1.jpg"></div>
-            <div class="hanging-photo swing-2" style="left: 34%;"><img src="sua-foto-2.jpg"></div>
-            <div class="hanging-photo swing-1" style="left: 60%;"><img src="sua-foto-1.jpg"></div>
-            <div class="hanging-photo swing-2" style="left: 84%;"><img src="sua-foto-2.jpg"></div>
+            <div class="photos-wrapper">
+                <!-- 5 FOTOS DISTRIBUÍDAS NO VARAL -->
+                <div class="hanging-photo swing-1"><img src="sua-foto-1.jpg" alt="Foto 1"></div>
+                <div class="hanging-photo swing-2"><img src="sua-foto-2.jpg" alt="Foto 2"></div>
+                <div class="hanging-photo swing-1"><img src="sua-foto-3.jpg" alt="Foto 3"></div>
+                <div class="hanging-photo swing-2"><img src="sua-foto-4.jpg" alt="Foto 4"></div>
+                <div class="hanging-photo swing-1"><img src="sua-foto-5.jpg" alt="Foto 5"></div>
+            </div>
         </div>
+
         <div class="comic-panel" style="z-index: 5; border-radius: 35px; background-color: var(--pure-white);">
             <img src="snoopy-turma.png" style="width: 100%; max-width: 250px; margin-bottom: 15px;">
-            <h2>Feliz Aniversário!</h2>
-            <p style="margin-bottom: 0;">Espero que tenha gostado, prometo fazer mais ideias criativas pra você se sentir amada. Você é meu amor todinho. ❤️</p>
+            <h2>Feliz Aniversário<br>meu amor!</h2>
+            <p style="margin-bottom: 0; font-size: clamp(1rem, 3.5vw, 1.25rem);">espero poder fazer você feliz para o resto da sua vida, pra quando formos velhinhos eu lembrar de momentos como esse em que eu te amo cada vez mais. ❤️</p>
         </div>
         <div class="snoopy-grass"></div>
     </div>
@@ -539,20 +578,65 @@
     <img src="snoopy-dancando.gif" id="snoopy-dance">
 
     <script>
+        // GERENCIAMENTO DA TELA DE CARREGAMENTO (PRELOADER)
+        window.addEventListener('load', () => {
+            const bgMusic = document.getElementById('musica-ambiente');
+            const soundAu = document.getElementById('sound-au');
+            const soundCoin = document.getElementById('sound-coin');
+            const musicaCasal = document.getElementById('musica-casal');
+            
+            const audiosToLoad = [bgMusic, soundAu, soundCoin, musicaCasal];
+            let loadedCount = 0;
+            const totalAudios = audiosToLoad.length;
+            const loadingBar = document.getElementById('loading-bar');
+            const loadingScreen = document.getElementById('loading-screen');
+            let isLoaded = false;
+
+            function finishLoading() {
+                if (isLoaded) return;
+                isLoaded = true;
+                loadingBar.style.width = '100%';
+                setTimeout(() => {
+                    loadingScreen.style.opacity = '0';
+                    setTimeout(() => loadingScreen.remove(), 800);
+                }, 500); 
+            }
+
+            function checkAudioLoad() {
+                loadedCount++;
+                loadingBar.style.width = (loadedCount / totalAudios) * 100 + '%';
+                if (loadedCount >= totalAudios) {
+                    finishLoading();
+                }
+            }
+
+            audiosToLoad.forEach(audio => {
+                if (audio.readyState >= 3) {
+                    checkAudioLoad();
+                } else {
+                    audio.addEventListener('canplaythrough', checkAudioLoad, { once: true });
+                    audio.addEventListener('error', checkAudioLoad, { once: true }); // Ignora se der erro pra não travar
+                }
+            });
+
+            // Fallback de 8 segundos caso a rede esteja muito lenta
+            setTimeout(() => {
+                if (!isLoaded) finishLoading();
+            }, 8000); 
+        });
+
         const bgMusic = document.getElementById('musica-ambiente'); bgMusic.volume = 0.3;
         const soundAu = document.getElementById('sound-au'); soundAu.volume = 0.08; 
         const soundCoin = document.getElementById('sound-coin');
         const musicaCasal = document.getElementById('musica-casal');
 
-        // INICIALIZAÇÃO "AGRESSIVA" DE ÁUDIO NO PRIMEIRO TOQUE
+        // INICIALIZAÇÃO DE ÁUDIO NO PRIMEIRO TOQUE
         function initAudio() {
             const audios = [bgMusic, soundAu, soundCoin, musicaCasal];
             audios.forEach(a => {
-                a.load(); 
-                a.muted = true;
                 let p = a.play();
                 if(p !== undefined) {
-                    p.then(() => { a.pause(); a.muted = false; a.currentTime = 0; }).catch(()=>{ a.muted = false; });
+                    p.then(() => { a.pause(); a.currentTime = 0; }).catch(()=>{});
                 }
             });
             window.removeEventListener('touchstart', initAudio);
@@ -601,7 +685,7 @@
         })();
 
         // NAVEGAÇÃO
-        let chuvaIniciada = false, fofuraIniciada = false, raspadinhaIniciada = false, bioIniciada = false;
+        let finalIniciado = false, fofuraIniciada = false, raspadinhaIniciada = false, bioIniciada = false;
         function mudarTela(idNovaTela) {
             soundAu.pause(); soundAu.currentTime = 0; 
             document.querySelectorAll('.screen').forEach(t => t.classList.remove('active'));
@@ -612,7 +696,7 @@
             if (idNovaTela === 'screen-regua' && !rulerInterval) iniciarRegua();
             if (idNovaTela === 'screen-fofurometro' && !fofuraIniciada) { fofuraIniciada = true; initDualFofura(); }
             if (idNovaTela === 'screen-cupons' && !raspadinhaIniciada) { raspadinhaIniciada = true; initRaspadinhas(); }
-            if (idNovaTela === 'screen-final' && !chuvaIniciada) { chuvaIniciada = true; iniciarChuvaDeFotos(); comemorarGrande(); }
+            if (idNovaTela === 'screen-final' && !finalIniciado) { finalIniciado = true; comemorarGrande(); }
         }
 
         function comemorarGrande() {
@@ -625,7 +709,6 @@
                 conf.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
                 document.body.appendChild(conf); setTimeout(() => conf.remove(), 3500);
             }
-            // TEMPO DO SNOOPY REDUZIDO
             setTimeout(() => { snoopy.classList.remove('show'); overlay.classList.remove('show'); }, 1400);
         }
 
@@ -771,7 +854,7 @@
                     if (scratchCount > 40) { 
                         finalizado = true; cover.classList.add('scratched'); cuponsRaspados++; let rest = 3 - cuponsRaspados;
                         if (rest > 0) counterText.innerText = `Você tem mais ${rest} escolha(s).`;
-                        else { counterText.innerText = "Parabéns mozibete, aproveite seus cupons!"; btnNext.disabled = false; comemorarGrande(); document.querySelectorAll('.scratch-card').forEach(c => { if (!c.querySelector('.scratch-cover').classList.contains('scratched')) { c.classList.add('locked'); c.querySelector('.scratch-cover').innerText = "Bloqueado"; } }); }
+                        else { counterText.innerText = "Parabéns mozibete, aproveite seus cupons!"; btnNext.disabled = false; document.querySelectorAll('.scratch-card').forEach(c => { if (!c.querySelector('.scratch-cover').classList.contains('scratched')) { c.classList.add('locked'); c.querySelector('.scratch-cover').innerText = "Bloqueado"; } }); }
                     }
                 }
                 cover.addEventListener('mousedown', startDrawing); cover.addEventListener('mousemove', raspar); window.addEventListener('mouseup', stopDrawing); cover.addEventListener('mouseleave', stopDrawing);
@@ -780,7 +863,7 @@
         }
 
         // MÁQUINA DA LUCY
-        function inserirMoedaDireto() { document.getElementById('coin').style.display = 'none'; soundCoin.play().catch(()=>{}); document.getElementById('elogio-texto').innerText = "Confie mais em si mesma mozi, não há nada nesse mundo que você não seja capaz de fazer, me provou isso muitas vezes, você é maravilhosa!!"; document.getElementById('receipt').classList.add('show'); comemorarGrande(); }
+        function inserirMoedaDireto() { document.getElementById('coin').style.display = 'none'; soundCoin.play().catch(()=>{}); document.getElementById('elogio-texto').innerText = "Confie mais em si mesma mozi, não há nada nesse mundo que você não seja capaz de fazer, me provou isso muitas vezes, você é maravilhosa!!"; document.getElementById('receipt').classList.add('show'); }
 
         // CAÇA-NÍQUEIS
         const f1 = ["Eu amo...", "Sou louco por...", "Meu coração acelera com...", "Sou viciado em..."]; const f2 = ["o seu sorriso lindo...", "o seu cheirinho...", "o seu abraço apertado...", "o seu jeitinho de brava..."]; const f3 = ["todos os dias.", "logo pela manhã.", "sempre que te vejo.", "pra sempre."];
@@ -822,14 +905,8 @@
             document.getElementById('bolo-instrucao').innerHTML = "<b style='color:var(--peanuts-green);'>✨ Pedido enviado para o universo! ✨</b>"; document.getElementById('btn-next-carta').style.display = 'inline-block'; comemorarGrande();
         }
 
-        // CONTRATO E CHUVA FINAL
+        // CONTRATO FINAL
         function assinarContrato(fromInput) { const cb = document.getElementById('check-contrato'); if (!fromInput) cb.checked = !cb.checked; document.getElementById('btn-next-dark').disabled = !cb.checked; }
-        function iniciarChuvaDeFotos() {
-            setInterval(() => {
-                let foto = document.createElement('img'); foto.src = Math.random() > 0.5 ? 'sua-foto-1.jpg' : 'sua-foto-2.jpg'; foto.className = 'falling-photo'; foto.style.left = Math.random() * 90 + 'vw'; foto.style.top = '-80px';
-                document.getElementById('screen-final').appendChild(foto); setTimeout(() => { foto.style.top = '115vh'; foto.style.transform = `rotate(${Math.random() * 360}deg)`; }, 50); setTimeout(() => foto.remove(), 12000);
-            }, 1100);
-        }
     </script>
 </body>
 </html>
