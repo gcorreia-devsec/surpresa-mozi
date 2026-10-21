@@ -222,7 +222,7 @@
 </head>
 <body>
 
-    <!-- TELA DE CARREGAMENTO (PRELOADER) -->
+    <!-- TELA DE CARREGAMENTO (FORÇADO 12 SEGUNDOS) -->
     <div id="loading-screen">
         <img src="snoopy-dormindo.png" class="loading-snoopy" alt="Carregando">
         <h2 style="color: var(--ink-black); font-size: clamp(1.5rem, 4vw, 2rem); text-transform: uppercase;">Carregando a surpresa...</h2>
@@ -578,51 +578,34 @@
     <img src="snoopy-dancando.gif" id="snoopy-dance">
 
     <script>
-        // GERENCIAMENTO DA TELA DE CARREGAMENTO (PRELOADER)
+        // GERENCIAMENTO DA TELA DE CARREGAMENTO (FORÇADO PARA 12 SEGUNDOS)
         window.addEventListener('load', () => {
-            const bgMusic = document.getElementById('musica-ambiente');
-            const soundAu = document.getElementById('sound-au');
-            const soundCoin = document.getElementById('sound-coin');
-            const musicaCasal = document.getElementById('musica-casal');
-            
-            const audiosToLoad = [bgMusic, soundAu, soundCoin, musicaCasal];
-            let loadedCount = 0;
-            const totalAudios = audiosToLoad.length;
             const loadingBar = document.getElementById('loading-bar');
             const loadingScreen = document.getElementById('loading-screen');
-            let isLoaded = false;
+            
+            // Força o download dos áudios em background imediatamente
+            const audios = [
+                document.getElementById('musica-ambiente'),
+                document.getElementById('sound-au'),
+                document.getElementById('sound-coin'),
+                document.getElementById('musica-casal')
+            ];
+            audios.forEach(a => a.load());
 
-            function finishLoading() {
-                if (isLoaded) return;
-                isLoaded = true;
-                loadingBar.style.width = '100%';
-                setTimeout(() => {
-                    loadingScreen.style.opacity = '0';
-                    setTimeout(() => loadingScreen.remove(), 800);
-                }, 500); 
-            }
-
-            function checkAudioLoad() {
-                loadedCount++;
-                loadingBar.style.width = (loadedCount / totalAudios) * 100 + '%';
-                if (loadedCount >= totalAudios) {
-                    finishLoading();
+            let progresso = 0;
+            // 12 segundos totais de carregamento = 100 passos de 120 milissegundos
+            const intervalo = setInterval(() => {
+                progresso += 1;
+                loadingBar.style.width = progresso + '%';
+                
+                if (progresso >= 100) {
+                    clearInterval(intervalo);
+                    setTimeout(() => {
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => loadingScreen.remove(), 800);
+                    }, 500);
                 }
-            }
-
-            audiosToLoad.forEach(audio => {
-                if (audio.readyState >= 3) {
-                    checkAudioLoad();
-                } else {
-                    audio.addEventListener('canplaythrough', checkAudioLoad, { once: true });
-                    audio.addEventListener('error', checkAudioLoad, { once: true }); // Ignora se der erro pra não travar
-                }
-            });
-
-            // Fallback de 8 segundos caso a rede esteja muito lenta
-            setTimeout(() => {
-                if (!isLoaded) finishLoading();
-            }, 8000); 
+            }, 120); 
         });
 
         const bgMusic = document.getElementById('musica-ambiente'); bgMusic.volume = 0.3;
@@ -886,23 +869,52 @@
         // BOLO E MICROFONE
         let velaApagada = false, audioCtxMic = null, micStream = null;
         async function ativarMicrofoneBolo() {
-            if (velaApagada) return; const btnMic = document.getElementById('btn-mic'); const meterBox = document.getElementById('mic-meter-box'); const meterBar = document.getElementById('mic-meter-bar');
+            if (velaApagada) return; 
+            const btnMic = document.getElementById('btn-mic'); 
+            const meterBox = document.getElementById('mic-meter-box'); 
+            const meterBar = document.getElementById('mic-meter-bar');
+            
+            meterBox.style.display = "block";
+            btnMic.innerText = "⏳ Aceite a permissão na tela...";
+
             try {
-                micStream = await navigator.mediaDevices.getUserMedia({ audio: true }); audioCtxMic = new (window.AudioContext || window.webkitAudioContext)(); const source = audioCtxMic.createMediaStreamSource(micStream);
-                const analyser = audioCtxMic.createAnalyser(); analyser.fftSize = 256; source.connect(analyser); const dataArray = new Uint8Array(analyser.frequencyBinCount);
-                btnMic.innerText = "🌬️ Assopre bem forte agora!"; meterBox.style.display = "block";
+                micStream = await navigator.mediaDevices.getUserMedia({ audio: true }); 
+                audioCtxMic = new (window.AudioContext || window.webkitAudioContext)(); 
+                const source = audioCtxMic.createMediaStreamSource(micStream);
+                const analyser = audioCtxMic.createAnalyser(); 
+                analyser.fftSize = 256; 
+                source.connect(analyser); 
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+                
+                btnMic.innerText = "🌬️ Assopre o microfone agora!"; 
+                
                 function monitorar() {
-                    if (velaApagada) return; analyser.getByteFrequencyData(dataArray); let soma = 0; for (let i = 0; i < 25; i++) soma += dataArray[i];
-                    let media = soma / 25; meterBar.style.width = Math.min(100, (media / 110) * 100) + '%';
-                    if (media > 105) apagarVela(); else requestAnimationFrame(monitorar);
+                    if (velaApagada) return; 
+                    analyser.getByteFrequencyData(dataArray); 
+                    let soma = 0; 
+                    for (let i = 0; i < 25; i++) soma += dataArray[i];
+                    let media = soma / 25; 
+                    
+                    meterBar.style.width = Math.min(100, (media / 90) * 100) + '%';
+                    
+                    if (media > 90) apagarVela(); 
+                    else requestAnimationFrame(monitorar);
                 }
                 monitorar();
-            } catch (e) { btnMic.innerText = "Toque direto no bolo para apagar a vela! 🎂"; }
+            } catch (e) { 
+                meterBox.style.display = "none";
+                btnMic.innerText = "Permissão negada! Toque no bolo para apagar. 🎂"; 
+            }
         }
         function apagarVela() {
-            if (velaApagada) return; velaApagada = true; if (micStream) micStream.getTracks().forEach(t => t.stop());
-            document.getElementById('candle-flame').classList.add('blown-out'); document.getElementById('btn-mic').style.display = 'none'; document.getElementById('mic-meter-box').style.display = 'none';
-            document.getElementById('bolo-instrucao').innerHTML = "<b style='color:var(--peanuts-green);'>✨ Pedido enviado para o universo! ✨</b>"; document.getElementById('btn-next-carta').style.display = 'inline-block'; comemorarGrande();
+            if (velaApagada) return; velaApagada = true; 
+            if (micStream) micStream.getTracks().forEach(t => t.stop());
+            document.getElementById('candle-flame').classList.add('blown-out'); 
+            document.getElementById('btn-mic').style.display = 'none'; 
+            document.getElementById('mic-meter-box').style.display = 'none';
+            document.getElementById('bolo-instrucao').innerHTML = "<b style='color:var(--peanuts-green);'>✨ Pedido enviado para o universo! ✨</b>"; 
+            document.getElementById('btn-next-carta').style.display = 'inline-block'; 
+            comemorarGrande();
         }
 
         // CONTRATO FINAL
